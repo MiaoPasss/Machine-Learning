@@ -22,26 +22,36 @@ def loadData():
     return trainData, validData, testData, trainTarget, validTarget, testTarget
 
 def MSE(W, b, x, y, reg):
-    # Your implementation here
+    
+    y_hat = np.dot(x, W) + b
+    mse_loss = (np.linalg.norm(y_hat - y)) ** 2
+    wd_loss = (np.linalg.norm(np.dot(W)) ** 2) * reg / 2
+
+    return (mse_loss + wd_loss)
     
 def gradMSE(W, b, x, y, reg):
-    # Your implementation here
+    
+    N = len(y)
+    y_hat = np.dot(x, W) + b
+
+    grad_weight = (1/N) * np.dot(np.transpose(x), y_hat - y) + reg * W
+    grad_bias = (1/N) * np.sum(y_hat - y)
+
+    return grad_weight, grad_bias
 
 def grad_descent(W, b, x, y, alpha, epochs, reg, error_tol):
     # Your implementation here
 
 def crossEntropyLoss(W, b, x, y, reg):
-    # Your implementation here
     N,n = x.shape
     y_hat = 1./(1 + np.exp(-(np.dot(x,W) + b)))
     total_loss = 1/N * (np.sum(-np.multiply(y, np.log(y_hat) - np.multiply((1 - y), np.log(y_hat))))) + reg/2 * (np.linalg.norm(W) ** 2)
     return total_loss
 
 def gradCE(W, b, x, y, reg):
-    # Your implementation here
     N,n = x.shape
     y_hat = 1./(1 + np.exp(-(np.dot(x,W) + b)))
-    grad_weight = -1/N * np.dot(x.T, y - y_hat) + reg * np.linalg.norm(W)
+    grad_weight = 1/N * np.dot(x.T, y - y_hat) + reg * np.linalg.norm(W)
     grad_bias = 1/N * np.sum(y - y_hat)
     return grad_weight, grad_bias
 
