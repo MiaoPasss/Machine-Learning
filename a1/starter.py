@@ -23,7 +23,7 @@ def loadData():
 
 def MSE(W, b, x, y, reg):
     # Your implementation here
-
+    
 def gradMSE(W, b, x, y, reg):
     # Your implementation here
 
@@ -32,9 +32,18 @@ def grad_descent(W, b, x, y, alpha, epochs, reg, error_tol):
 
 def crossEntropyLoss(W, b, x, y, reg):
     # Your implementation here
+    N,n = x.shape
+    y_hat = 1./(1 + np.exp(-(np.dot(x,W) + b)))
+    total_loss = 1/N * (np.sum(-np.multiply(y, np.log(y_hat) - np.multiply((1 - y), np.log(y_hat))))) + reg/2 * (np.linalg.norm(W) ** 2)
+    return total_loss
 
 def gradCE(W, b, x, y, reg):
     # Your implementation here
+    N,n = x.shape
+    y_hat = 1./(1 + np.exp(-(np.dot(x,W) + b)))
+    grad_weight = -1/N * np.dot(x.T, y - y_hat) + reg * np.linalg.norm(W)
+    grad_bias = 1/N * np.sum(y - y_hat)
+    return grad_weight, grad_bias
 
 def buildGraph(loss="MSE"):
 	#Initialize weight and bias tensors
