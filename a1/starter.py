@@ -30,7 +30,6 @@ def MSE(W, b, x, y, reg):
     return (mse_loss + wd_loss)
     
 def gradMSE(W, b, x, y, reg):
-    
     N = len(y)
     y_hat = np.dot(x, W) + b
 
@@ -39,8 +38,47 @@ def gradMSE(W, b, x, y, reg):
 
     return grad_weight, grad_bias
 
-def grad_descent(W, b, x, y, alpha, epochs, reg, error_tol):
-    # Your implementation here
+def grad_descent(W, b, x, y, alpha, epochs, reg, error_tol, lossType = "MSE"):
+    weight_record = []
+    bias_record = []
+    loss_record = []
+
+    print("Calculating gradient descent of",lossType, "with alpha = ", alpha, ", regularizer = ", reg)
+    current_weight = W
+    current_bias = b
+    
+    if lossType is "MSE":
+        for _ in range(0, epochs):
+            grad_w, grad_b = gradMSE(current_weight, current_bias, x, y, reg)
+            updated_weight = current_weight - np.multiply(alpha, grad_w)
+            if np.linalg.norm(updated_weight - current_weight) < error_tol):
+                break
+            updated_bias = current_bias - np.multiply(alpha, grad_b)
+            loss = MSE(updated_weight, updated_bias, x, y, reg)
+            current_weight = updated_weight
+            current_bias = updated_bias
+            weight_record.append(updated_weight)
+            bias_record.append(updated_bias)
+            loss_record.append(loss)
+
+    elif lossType is "CE":
+        for _ in range(0, epochs):
+            grad_w, grad_b = gradCE(current_weight, current_bias, x, y, reg)
+            updated_weight = current_weight - np.multiply(alpha, grad_w)
+            if np.linalg.norm(updated_weight - current_weight) < error_tol):
+                break
+            updated_bias = current_bias - np.multiply(alpha, grad_b)
+            loss = crossEntropyLoss(updated_weight, updated_bias, x, y, reg)
+            current_weight = updated_weight
+            current_bias = updated_bias
+            weight_record.append(updated_weight)
+            bias_record.append(updated_bias)
+            loss_record.append(loss)
+    else:
+        exit -1
+    return weight_record, bias_record, loss_record
+
+    
 
 def crossEntropyLoss(W, b, x, y, reg):
     N,n = x.shape
