@@ -23,17 +23,16 @@ def loadData():
 
 def MSE(W, b, x, y, reg):
     
-    y_hat = np.dot(x, W) + b
+    y_hat = np.matmul(x, W) + b
     mse_loss = (np.linalg.norm(y_hat - y)) ** 2
-    wd_loss = (np.linalg.norm(np.dot(W)) ** 2) * reg / 2
+    wd_loss = (np.linalg.norm(W) ** 2) * reg / 2
 
     return (mse_loss + wd_loss)
     
 def gradMSE(W, b, x, y, reg):
     N = len(y)
-    y_hat = np.dot(x, W) + b
-
-    grad_weight = (1/N) * np.dot(np.transpose(x), y_hat - y) + reg * W
+    y_hat = np.matmul(x, W) + b
+    grad_weight = (1/N) * np.dot(np.transpose(x), np.subtract(y_hat, y)) + reg * W
     grad_bias = (1/N) * np.sum(y_hat - y)
 
     return grad_weight, grad_bias
@@ -44,14 +43,14 @@ def grad_descent(W, b, x, y, alpha, epochs, reg, error_tol, lossType = "MSE"):
     loss_record = []
 
     print("Calculating gradient descent of",lossType, "with alpha = ", alpha, ", regularizer = ", reg)
-    current_weight = W
+    current_weight = W.reshape(x.shape[1], 1)
     current_bias = b
     
     if lossType is "MSE":
         for _ in range(0, epochs):
             grad_w, grad_b = gradMSE(current_weight, current_bias, x, y, reg)
             updated_weight = current_weight - np.multiply(alpha, grad_w)
-            if np.linalg.norm(updated_weight - current_weight) < error_tol):
+            if (np.linalg.norm(updated_weight - current_weight) < error_tol):
                 break
             updated_bias = current_bias - np.multiply(alpha, grad_b)
             loss = MSE(updated_weight, updated_bias, x, y, reg)
@@ -65,7 +64,7 @@ def grad_descent(W, b, x, y, alpha, epochs, reg, error_tol, lossType = "MSE"):
         for _ in range(0, epochs):
             grad_w, grad_b = gradCE(current_weight, current_bias, x, y, reg)
             updated_weight = current_weight - np.multiply(alpha, grad_w)
-            if np.linalg.norm(updated_weight - current_weight) < error_tol):
+            if (np.linalg.norm(updated_weight - current_weight) < error_tol):
                 break
             updated_bias = current_bias - np.multiply(alpha, grad_b)
             loss = crossEntropyLoss(updated_weight, updated_bias, x, y, reg)
@@ -74,6 +73,7 @@ def grad_descent(W, b, x, y, alpha, epochs, reg, error_tol, lossType = "MSE"):
             weight_record.append(updated_weight)
             bias_record.append(updated_bias)
             loss_record.append(loss)
+
     else:
         exit -1
     return weight_record, bias_record, loss_record
