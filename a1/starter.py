@@ -22,7 +22,6 @@ def loadData():
     return trainData, validData, testData, trainTarget, validTarget, testTarget
 
 def MSE(W, b, x, y, reg):
-    
     y_hat = np.matmul(x, W) + b
     mse_loss = (np.linalg.norm(y_hat - y)) ** 2
     wd_loss = (np.linalg.norm(W) ** 2) * reg / 2
@@ -78,7 +77,6 @@ def grad_descent(W, b, x, y, alpha, epochs, reg, error_tol, lossType = "MSE"):
     return weight_record, bias_record, loss_record
 
     
-
 def crossEntropyLoss(W, b, x, y, reg):
     N,n = x.shape
     y_hat = 1./(1 + np.exp(-(np.dot(x,W) + b)))
@@ -98,9 +96,11 @@ def buildGraph(loss="MSE"):
 
 	if loss == "MSE":
 	# Your implementation
+        return
 	
 	elif loss == "CE":
 	#Your implementation here
-
+		return
 
 loadData()
+        
