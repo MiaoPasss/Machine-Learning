@@ -7,15 +7,6 @@ trainData = np.array([x.flatten() for x in trainData])
 validData = np.array([x.flatten() for x in validData])
 testData = np.array([x.flatten() for x in testData])
 
-def timer(method):
-    def timed(*args, **kwargs):
-        ts = time.time()
-        result = method(*args, **kwargs)
-        te = time.time()
-        print (method.__name__, ': ', (te - ts) * 1000, 'ms')
-        return result
-    return timed
-
 def linreg():
     #1.3
 
