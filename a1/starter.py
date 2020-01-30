@@ -96,11 +96,10 @@ def buildGraph(loss="MSE"):
 
 	if loss == "MSE":
 	# Your implementation
-        return
+            return
 	
 	elif loss == "CE":
 	#Your implementation here
-		return
+	    return
 
 loadData()
-        
