@@ -105,6 +105,7 @@ def accuracy_calculation(W, b, x, y):
     
 def buildGraph(loss="MSE"):
 
+<<<<<<< HEAD
     '''
     tf.random.truncated_normal(
         shape,
@@ -142,4 +143,12 @@ def buildGraph(loss="MSE"):
         ce_loss = tf.reduce_mean(-y * tf.math.log(y_hat) - (1 - y) * tf.math.log(y_hat))
         wd_loss = reg * tf.nn.l2_loss(W)
         loss = ce_loss + wd_loss
+=======
+	if loss == "MSE":
+	# Your implementation
+        return
+	
+	elif loss == "CE":
+	#Your implementation here
+>>>>>>> Added script for normal equation
         return
