@@ -51,7 +51,7 @@ def grad_descent(W, b, x, y, alpha, epochs, reg, error_tol, lossType = "MSE"):
     bias_record = []
     loss_record = []
 
-    print("Calculating gradient descent of",lossType, "with alpha = ", alpha, ", regularizer = ", reg)
+    print("Calculating gradient descent of", lossType, "and learning rate", alpha, ", regularizer", reg)
     current_weight = W.reshape(x.shape[1], 1)
     current_bias = b
     
@@ -100,6 +100,10 @@ def gradCE(W, b, x, y, reg):
     grad_bias = 1/N * np.sum(y - y_hat)
     return grad_weight, grad_bias
 
+def accuracy_calculation(W, b, x, y):
+    acc = [np.sum((np.dot(x, W[i]) + b[i] >= 0.5) == y) / y.shape[0] for i in range(len(W))]
+    return acc
+    
 def buildGraph(loss="MSE"):
 	#Initialize weight and bias tensors
 	tf.set_random_seed(421)
