@@ -59,7 +59,6 @@ def grad_descent(W, b, x, y, alpha, epochs, reg, error_tol, lossType = "MSE"):
             weight_record.append(updated_weight)
             bias_record.append(updated_bias)
             loss_record.append(loss)
-
     elif lossType is "CE":
         for _ in range(0, epochs):
             grad_w, grad_b = gradCE(current_weight, current_bias, x, y, reg)
@@ -103,3 +102,5 @@ def buildGraph(loss="MSE"):
 	elif loss == "CE":
 	#Your implementation here
 
+
+loadData()
