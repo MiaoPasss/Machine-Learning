@@ -32,7 +32,7 @@ def loadData():
 
 def MSE(W, b, x, y, reg):
     y_hat = np.matmul(x, W) + b
-    mse_loss = (np.linalg.norm(y_hat - y)) ** 2
+    mse_loss = ((np.linalg.norm(y_hat - y)) ** 2)/N
     wd_loss = (np.linalg.norm(W) ** 2) * reg / 2
 
     return (mse_loss + wd_loss)
