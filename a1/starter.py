@@ -2,14 +2,14 @@ import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
 
-def timer(method):
-    def timed(*args, **kwargs):
-        ts = time.time()
-        result = method(*args, **kwargs)
-        te = time.time()
-        print (method.__name__, ':', (te - ts) * 1000, 'ms')
-        return result
-    return timed
+#def timer(method):
+#    def timed(*args, **kwargs):
+#        ts = time.time()
+#        result = method(*args, **kwargs)
+#        te = time.time()
+#        print (method.__name__, ':', (te - ts) * 1000, 'ms')
+#        return result
+#    return timed
 
 def loadData():
     with np.load('notMNIST.npz') as data :
@@ -45,13 +45,13 @@ def gradMSE(W, b, x, y, reg):
 
     return grad_weight, grad_bias
 
-@timer
+#@timer
 def grad_descent(W, b, x, y, alpha, epochs, reg, error_tol, lossType = "MSE"):
     weight_record = []
     bias_record = []
     loss_record = []
 
-    print("Calculating gradient descent of", lossType, "and learning rate", alpha, ", regularizer", reg)
+    print("Calculating gradient descent of", lossType, "with learning rate =", alpha, "and regularizer =", reg)
     current_weight = W.reshape(x.shape[1], 1)
     current_bias = b
     
@@ -105,13 +105,13 @@ def accuracy_calculation(W, b, x, y):
     return acc
     
 def buildGraph(loss="MSE"):
-	#Initialize weight and bias tensors
-	tf.set_random_seed(421)
+    #Initialize weight and bias tensors
+    tf.set_random_seed(421)
 
-	if loss == "MSE":
-	# Your implementation
-            return
-	
-	elif loss == "CE":
-	#Your implementation here
-	    return
+    if loss == "MSE":
+    # Your implementation
+        return
+
+    elif loss == "CE":
+    #Your implementation here
+        return
