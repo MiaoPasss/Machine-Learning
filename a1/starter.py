@@ -132,7 +132,10 @@ def buildGraph(loss="MSE"):
         mse_loss = tf.reduce_mean(tf.square(y_hat - y))
         wd_loss = reg * tf.nn.l2_loss(W)
         loss = mse_loss + wd_loss
-        return 
+
+        optimizer = tf.train.AdamOptimizer(0.001)
+        optimizer = optimizer.minimize(loss)
+        return W, b, y_hat, y, loss, optimizer
 
     elif loss == "CE":
     #Your implementation here
