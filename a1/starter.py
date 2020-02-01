@@ -32,7 +32,7 @@ def loadData():
 
 def MSE(W, b, x, y, reg):
     y_hat = np.matmul(x, W) + b
-    mse_loss = ((np.linalg.norm(y_hat - y)) ** 2)/N
+    mse_loss = ((np.linalg.norm(y_hat - y)) ** 2)/x.shape[0]
     wd_loss = (np.linalg.norm(W) ** 2) * reg / 2
 
     return (mse_loss + wd_loss)
@@ -40,7 +40,7 @@ def MSE(W, b, x, y, reg):
 def gradMSE(W, b, x, y, reg):
     N = len(y)
     y_hat = np.matmul(x, W) + b
-    grad_weight = (1/N) * np.dot(np.transpose(x), np.subtract(y_hat, y)) + reg * W
+    grad_weight = (2/N) * np.dot(np.transpose(x), (y_hat - y)) + reg * W
     grad_bias = (1/N) * np.sum(y_hat - y)
 
     return grad_weight, grad_bias
@@ -51,7 +51,6 @@ def grad_descent(W, b, x, y, alpha, epochs, reg, error_tol, lossType = "MSE"):
     bias_record = []
     loss_record = []
 
-    print("Calculating gradient descent of", lossType, "with learning rate =", alpha, "and regularizer =", reg)
     current_weight = W.reshape(x.shape[1], 1)
     current_bias = b
     

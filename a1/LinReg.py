@@ -1,8 +1,5 @@
-%tensorflow_version 2.x
-
 import matplotlib.pyplot as plt
 import numpy as np
-import time
 
 def print_info(loss, train_a, valid_a, test_a, type, alpha, reg, comp_time):    
     if type is "GD":
@@ -15,6 +12,7 @@ def print_info(loss, train_a, valid_a, test_a, type, alpha, reg, comp_time):
 def linreg():
     #1.3
 
+    import starter
     import time
 
     trainData, validData, testData, trainTarget, validTarget, testTarget = loadData()
