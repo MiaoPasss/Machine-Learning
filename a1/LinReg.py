@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import starter
 
 def print_info(loss, train_a, valid_a, test_a, type, alpha, reg, comp_time):    
     if type is "GD":
@@ -12,7 +13,6 @@ def print_info(loss, train_a, valid_a, test_a, type, alpha, reg, comp_time):
 def linreg():
     #1.3
 
-    import starter
     import time
 
     trainData, validData, testData, trainTarget, validTarget, testTarget = loadData()
@@ -44,6 +44,14 @@ def linreg():
     accuracy_train2 = accuracy_calculation(weight_train2, bias_train2, trainData, trainTarget)
     accuracy_train3 = accuracy_calculation(weight_train3, bias_train3, trainData, trainTarget)
 
+    accuracy_valid1 = accuracy_calculation(weight_train1, bias_train1, validData, validTarget)
+    accuracy_valid2 = accuracy_calculation(weight_train2, bias_train2, validData, validTarget)
+    accuracy_valid3 = accuracy_calculation(weight_train3, bias_train3, validData, validTarget)
+
+    accuracy_test1 = accuracy_calculation(weight_train1, bias_train1, testData, testTarget)
+    accuracy_test2 = accuracy_calculation(weight_train2, bias_train2, testData, testTarget)
+    accuracy_test3 = accuracy_calculation(weight_train3, bias_train3, testData, testTarget)
+
     plt.figure()
     plt.suptitle('Training losses')
     plt.plot(loss_train1,'',loss_train2,'',loss_train3,'')
@@ -62,10 +70,7 @@ def linreg():
     plt.grid()
     plt.legend(['MSE: \u03B1 = {}, \u03BB = {}'.format(alpha1, reg),'MSE: \u03B1 = {}, \u03BB = {}'.format(alpha2, reg),'MSE: \u03B1 = {}, \u03BB = {}'.format(alpha3, reg)])
     plt.savefig('Learning_rate_adjustment_training_accuracy_LinReg.png')
-
-    accuracy_valid1 = accuracy_calculation(weight_train1, bias_train1, validData, validTarget)
-    accuracy_valid2 = accuracy_calculation(weight_train2, bias_train2, validData, validTarget)
-    accuracy_valid3 = accuracy_calculation(weight_train3, bias_train3, validData, validTarget)
+    
 
     plt.figure()
     plt.suptitle('Validation accuracy')
@@ -75,10 +80,7 @@ def linreg():
     plt.grid()
     plt.legend(['MSE: \u03B1 = {}, \u03BB = {}'.format(alpha1, reg),'MSE: \u03B1 = {}, \u03BB = {}'.format(alpha2, reg),'MSE: \u03B1 = {}, \u03BB = {}'.format(alpha3, reg)])
     plt.savefig('Learning_rate_adjustment_validation_accuracy_LinReg.png')
-
-    accuracy_test1 = accuracy_calculation(weight_train1, bias_train1, testData, testTarget)
-    accuracy_test2 = accuracy_calculation(weight_train2, bias_train2, testData, testTarget)
-    accuracy_test3 = accuracy_calculation(weight_train3, bias_train3, testData, testTarget)
+    
 
     plt.figure()
     plt.suptitle('Testing accuracy')

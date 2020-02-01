@@ -104,12 +104,35 @@ def accuracy_calculation(W, b, x, y):
     return acc
     
 def buildGraph(loss="MSE"):
-    #Initialize weight and bias tensors
+
+    '''
+    tf.random.truncated_normal(
+        shape,
+        mean=0.0,
+        stddev=1.0,
+        dtype=tf.dtypes.float32,
+        seed=None,
+        name=None
+    )
+    '''
+
+    W = tf.Variable(tf.truncated_normal([784, 1], 0, 0.5)
+    b = tf.Variable(0)
+
+    x = tf.placeholder(tf.float32, shape = [None, 784])
+    y = tf.placeholder(tf.float32, shape = [None, 1])
+    reg = tf.placeholder(tf.float32)
+
     tf.set_random_seed(421)
 
+    #tf.nn.l2_loss computes half of the norm without square root
+
     if loss == "MSE":
-    # Your implementation
-        return
+        y_hat = x @ W + b
+        mse_loss = tf.reduce_mean(tf.square(y_hat - y))
+        wd_loss = reg * tf.nn.l2_loss(W)
+        loss = mse_loss + wd_loss
+        return 
 
     elif loss == "CE":
     #Your implementation here
