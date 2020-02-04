@@ -138,5 +138,8 @@ def buildGraph(loss="MSE"):
         return W, b, y_hat, y, loss, optimizer
 
     elif loss == "CE":
-    #Your implementation here
+        y_hat = 1 / (1 + tf.math.exp(-(x @ W + b)))
+        ce_loss = tf.reduce_mean(-y * tf.math.log(y_hat) - (1 - y) * tf.math.log(y_hat))
+        wd_loss = reg * tf.nn.l2_loss(W)
+        loss = ce_loss + wd_loss
         return
