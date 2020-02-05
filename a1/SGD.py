@@ -41,6 +41,21 @@ def SGD():
         loss_valid.append(MSE(weight_train, bias_train, validData, validTarget))
         accuracy_test.append(accuracy_calculation(weight_train, bias_train, testData, testTarget))
         loss_test.append(MSE(weight_train, bias_train, testData, testTarget))
+    
+    plt.figure()
+    plt.suptitle('Losses')
+    plt.plot(loss_train,'',loss_valid,'',loss_test,'')
+    plt.xlabel('epochs')
+    plt.ylabel('losses')
+    plt.grid()
+    plt.legend(['Train', 'Valid', 'Test'])
+    plt.figure()
+    plt.suptitle('Accuracy')
+    plt.plot(accuracy_train,'',accuracy_valid,'',accuracy_test,'')
+    plt.xlabel('epochs')
+    plt.ylabel('accuracy')
+    plt.grid()
+    plt.legend(['Train', 'Valid', 'Test'])
 
 
 
