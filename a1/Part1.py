@@ -2,13 +2,15 @@ import matplotlib.pyplot as plt
 import numpy as np
 import starter
 
-def print_info(loss, train_a, valid_a, test_a, type, alpha, reg, comp_time):    
+def print_info(train_l, valid_l, test_l, train_a, valid_a, test_a, type, alpha, reg, comp_time):
     if type is "GD":
-        print('Batch GD with \u03B1 = {}, \u03BB = {}, MSE = {}, training accuracy = {}, valid accuracy = {}, test accuracy = {}, '
-            'computation time = {} ms'.format(alpha, reg, loss, train_a, valid_a, test_a, int(comp_time * 1000)))
+        print('Batch GD with \u03B1 = {}, \u03BB = {}, training MSE = {}, validation MSE = {}, testing MSE = {}, '
+            'training accuracy = {}, valid accuracy = {}, test accuracy = {}, '
+            'computation time = {} ms'.format(alpha, reg, train_l, valid_l, test_l, train_a, valid_a, test_a, int(comp_time * 1000)))
     elif type is "normal":
-        print('Normal Equation with \u03BB = {}, MSE = {}, training accuracy = {}, valid accuracy = {}, test accuracy = {}, '
-            'computation time = {} ms'.format(reg, loss, train_a, valid_a, test_a, int(comp_time * 1000)))
+        print('Normal Equation with \u03BB = {}, training MSE = {}, '
+            'training accuracy = {}, valid accuracy = {}, test accuracy = {}, '
+            'computation time = {} ms'.format(reg, train_l, train_a, valid_a, test_a, int(comp_time * 1000)))
 
 def linreg():
 
@@ -45,9 +47,17 @@ def linreg():
     accuracy_train2 = accuracy_calculation(weight_train2, bias_train2, trainData, trainTarget)
     accuracy_train3 = accuracy_calculation(weight_train3, bias_train3, trainData, trainTarget)
 
+    loss_valid1 = loss_calculation(weight_train1, bias_train1, validData, validTarget, reg)
+    loss_valid2 = loss_calculation(weight_train2, bias_train2, validData, validTarget, reg)
+    loss_valid3 = loss_calculation(weight_train3, bias_train3, validData, validTarget, reg)
+
     accuracy_valid1 = accuracy_calculation(weight_train1, bias_train1, validData, validTarget)
     accuracy_valid2 = accuracy_calculation(weight_train2, bias_train2, validData, validTarget)
     accuracy_valid3 = accuracy_calculation(weight_train3, bias_train3, validData, validTarget)
+
+    loss_test1 = loss_calculation(weight_train1, bias_train1, testData, testTarget, reg)
+    loss_test2 = loss_calculation(weight_train2, bias_train2, testData, testTarget, reg)
+    loss_test3 = loss_calculation(weight_train3, bias_train3, testData, testTarget, reg)
 
     accuracy_test1 = accuracy_calculation(weight_train1, bias_train1, testData, testTarget)
     accuracy_test2 = accuracy_calculation(weight_train2, bias_train2, testData, testTarget)
@@ -62,6 +72,23 @@ def linreg():
     plt.legend(['MSE: \u03B1 = {}, \u03BB = {}'.format(alpha1, reg),'MSE: \u03B1 = {}, \u03BB = {}'.format(alpha2, reg),'MSE: \u03B1 = {}, \u03BB = {}'.format(alpha3, reg)])
     plt.savefig('Learning_rate_adjustment_training_loss_LinReg.png')
 
+    plt.figure()
+    plt.suptitle('Validation losses')
+    plt.plot(loss_valid1,'',loss_valid2,'',loss_valid3,'')
+    plt.xlabel('epochs')
+    plt.ylabel('losses')
+    plt.grid()
+    plt.legend(['MSE: \u03B1 = {}, \u03BB = {}'.format(alpha1, reg),'MSE: \u03B1 = {}, \u03BB = {}'.format(alpha2, reg),'MSE: \u03B1 = {}, \u03BB = {}'.format(alpha3, reg)])
+    plt.savefig('Learning_rate_adjustment_validation_loss_LinReg.png')
+
+    plt.figure()
+    plt.suptitle('Testing losses')
+    plt.plot(loss_test1,'',loss_test2,'',loss_test3,'')
+    plt.xlabel('epochs')
+    plt.ylabel('losses')
+    plt.grid()
+    plt.legend(['MSE: \u03B1 = {}, \u03BB = {}'.format(alpha1, reg),'MSE: \u03B1 = {}, \u03BB = {}'.format(alpha2, reg),'MSE: \u03B1 = {}, \u03BB = {}'.format(alpha3, reg)])
+    plt.savefig('Learning_rate_adjustment_testing_loss_LinReg.png')
 
     plt.figure()
     plt.suptitle('Training accuracy')
@@ -92,9 +119,9 @@ def linreg():
     plt.legend(['MSE: \u03B1 = {}, \u03BB = {}'.format(alpha1, reg),'MSE: \u03B1 = {}, \u03BB = {}'.format(alpha2, reg),'MSE: \u03B1 = {}, \u03BB = {}'.format(alpha3, reg)])
     plt.savefig('Learning_rate_adjustment_testing_accuracy_LinReg.png')
 
-    print_info(loss_train1[-1], accuracy_train1[-1], accuracy_valid1[-1], accuracy_test1[-1], "GD", alpha1, reg, end1 - start1)
-    print_info(loss_train2[-1], accuracy_train2[-1], accuracy_valid2[-1], accuracy_test2[-1], "GD", alpha2, reg, end2 - start2)
-    print_info(loss_train3[-1], accuracy_train3[-1], accuracy_valid3[-1], accuracy_test3[-1], "GD", alpha3, reg, end3 - start3)
+    print_info(loss_train1[-1], loss_valid1[-1], loss_test1[-1], accuracy_train1[-1], accuracy_valid1[-1], accuracy_test1[-1], "GD", alpha1, reg, end1 - start1)
+    print_info(loss_train2[-1], loss_valid2[-1], loss_test2[-1], accuracy_train2[-1], accuracy_valid2[-1], accuracy_test2[-1], "GD", alpha2, reg, end2 - start2)
+    print_info(loss_train3[-1], loss_valid3[-1], loss_test3[-1], accuracy_train3[-1], accuracy_valid3[-1], accuracy_test3[-1], "GD", alpha3, reg, end3 - start3)
 
 
     #1.4
@@ -116,6 +143,22 @@ def linreg():
     accuracy_train5 = accuracy_calculation(weight_train5, bias_train5, trainData, trainTarget)
     accuracy_train6 = accuracy_calculation(weight_train6, bias_train6, trainData, trainTarget)
 
+    loss_valid4 = loss_calculation(weight_train4, bias_train4, validData, validTarget, reg1)
+    loss_valid5 = loss_calculation(weight_train5, bias_train5, validData, validTarget, reg2)
+    loss_valid6 = loss_calculation(weight_train6, bias_train6, validData, validTarget, reg3)
+
+    accuracy_valid4 = accuracy_calculation(weight_train4, bias_train4, validData, validTarget)
+    accuracy_valid5 = accuracy_calculation(weight_train5, bias_train5, validData, validTarget)
+    accuracy_valid6 = accuracy_calculation(weight_train6, bias_train6, validData, validTarget)
+
+    loss_test4 = loss_calculation(weight_train4, bias_train4, testData, testTarget, reg1)
+    loss_test5 = loss_calculation(weight_train5, bias_train5, testData, testTarget, reg2)
+    loss_test6 = loss_calculation(weight_train6, bias_train6, testData, testTarget, reg3)
+
+    accuracy_test4 = accuracy_calculation(weight_train4, bias_train4, testData, testTarget)
+    accuracy_test5 = accuracy_calculation(weight_train5, bias_train5, testData, testTarget)
+    accuracy_test6 = accuracy_calculation(weight_train6, bias_train6, testData, testTarget)
+
     plt.figure()
     plt.suptitle('Training losses')
     plt.plot(loss_train4,'',loss_train5,'',loss_train6,'')
@@ -125,6 +168,23 @@ def linreg():
     plt.legend(['MSE: \u03B1 = {}, \u03BB = {}'.format(alpha, reg1),'MSE: \u03B1 = {}, \u03BB = {}'.format(alpha, reg2),'MSE: \u03B1 = {}, \u03BB = {}'.format(alpha, reg3)])
     plt.savefig('Regulation_adjustment_training_loss_LinReg.png')
 
+    plt.figure()
+    plt.suptitle('Validation losses')
+    plt.plot(loss_valid4,'',loss_valid5,'',loss_valid6,'')
+    plt.xlabel('epochs')
+    plt.ylabel('losses')
+    plt.grid()
+    plt.legend(['MSE: \u03B1 = {}, \u03BB = {}'.format(alpha, reg1),'MSE: \u03B1 = {}, \u03BB = {}'.format(alpha, reg2),'MSE: \u03B1 = {}, \u03BB = {}'.format(alpha, reg3)])
+    plt.savefig('Regulation_adjustment_validation_loss_LinReg.png')
+
+    plt.figure()
+    plt.suptitle('Testing losses')
+    plt.plot(loss_test4,'',loss_test5,'',loss_test6,'')
+    plt.xlabel('epochs')
+    plt.ylabel('losses')
+    plt.grid()
+    plt.legend(['MSE: \u03B1 = {}, \u03BB = {}'.format(alpha, reg1),'MSE: \u03B1 = {}, \u03BB = {}'.format(alpha, reg2),'MSE: \u03B1 = {}, \u03BB = {}'.format(alpha, reg3)])
+    plt.savefig('Regulation_adjustment_testing_loss_LinReg.png')
 
     plt.figure()
     plt.suptitle('Training accuracy')
@@ -135,9 +195,6 @@ def linreg():
     plt.legend(['MSE: \u03B1 = {}, \u03BB = {}'.format(alpha, reg1),'MSE: \u03B1 = {}, \u03BB = {}'.format(alpha, reg2),'MSE: \u03B1 = {}, \u03BB = {}'.format(alpha, reg3)])
     plt.savefig('Regulation_adjustment_training_accuracy_LinReg.png')
 
-    accuracy_valid4 = accuracy_calculation(weight_train4, bias_train4, validData, validTarget)
-    accuracy_valid5 = accuracy_calculation(weight_train5, bias_train5, validData, validTarget)
-    accuracy_valid6 = accuracy_calculation(weight_train6, bias_train6, validData, validTarget)
 
     plt.figure()
     plt.suptitle('Validation accuracy')
@@ -148,9 +205,6 @@ def linreg():
     plt.legend(['MSE: \u03B1 = {}, \u03BB = {}'.format(alpha, reg1),'MSE: \u03B1 = {}, \u03BB = {}'.format(alpha, reg2),'MSE: \u03B1 = {}, \u03BB = {}'.format(alpha, reg3)])
     plt.savefig('Regulation_adjustment_validation_accuracy_LinReg.png')
 
-    accuracy_test4 = accuracy_calculation(weight_train4, bias_train4, testData, testTarget)
-    accuracy_test5 = accuracy_calculation(weight_train5, bias_train5, testData, testTarget)
-    accuracy_test6 = accuracy_calculation(weight_train6, bias_train6, testData, testTarget)
 
     plt.figure()
     plt.suptitle('Testing accuracy')
@@ -161,9 +215,9 @@ def linreg():
     plt.legend(['MSE: \u03B1 = {}, \u03BB = {}'.format(alpha, reg1),'MSE: \u03B1 = {}, \u03BB = {}'.format(alpha, reg2),'MSE: \u03B1 = {}, \u03BB = {}'.format(alpha, reg3)])
     plt.savefig('Regulation_adjustment_testing_accuracy_LinReg.png')
 
-    print_info(loss_train4[-1], accuracy_train4[-1], accuracy_valid4[-1], accuracy_test4[-1], "GD", alpha, reg1, end4 - start4)
-    print_info(loss_train5[-1], accuracy_train5[-1], accuracy_valid5[-1], accuracy_test5[-1], "GD", alpha, reg2, end5 - start5)
-    print_info(loss_train6[-1], accuracy_train6[-1], accuracy_valid6[-1], accuracy_test6[-1], "GD", alpha, reg3, end6 - start6)
+    print_info(loss_train4[-1], loss_valid4[-1], loss_test4[-1], accuracy_train4[-1], accuracy_valid4[-1], accuracy_test4[-1], "GD", alpha, reg1, end4 - start4)
+    print_info(loss_train5[-1], loss_valid5[-1], loss_test5[-1], accuracy_train5[-1], accuracy_valid5[-1], accuracy_test5[-1], "GD", alpha, reg2, end5 - start5)
+    print_info(loss_train6[-1], loss_valid6[-1], loss_test6[-1], accuracy_train6[-1], accuracy_valid6[-1], accuracy_test6[-1], "GD", alpha, reg3, end6 - start6)
 
 
     #1.5
@@ -180,10 +234,20 @@ def linreg():
     w_normal_train3, b_normal_train3 = normal_equation(trainData, trainTarget, reg3)
     end3 = time.time()
     
-    loss_normal = MSE(w_normal_train, b_normal_train, trainData, trainTarget, reg)
-    loss_normal1 = MSE(w_normal_train1, b_normal_train1, trainData, trainTarget, reg1)
-    loss_normal2 = MSE(w_normal_train2, b_normal_train2, trainData, trainTarget, reg2)
-    loss_normal3 = MSE(w_normal_train3, b_normal_train3, trainData, trainTarget, reg3)
+    loss_normal_train = MSE(w_normal_train, b_normal_train, trainData, trainTarget, reg)
+    loss_normal_train1 = MSE(w_normal_train1, b_normal_train1, trainData, trainTarget, reg1)
+    loss_normal_train2 = MSE(w_normal_train2, b_normal_train2, trainData, trainTarget, reg2)
+    loss_normal_train3 = MSE(w_normal_train3, b_normal_train3, trainData, trainTarget, reg3)
+
+    loss_normal_valid = MSE(w_normal_train, b_normal_train, validData, validTarget, reg)
+    loss_normal_valid1 = MSE(w_normal_train1, b_normal_train1, validData, validTarget, reg1)
+    loss_normal_valid2 = MSE(w_normal_train2, b_normal_train2, validData, validTarget, reg2)
+    loss_normal_valid3 = MSE(w_normal_train3, b_normal_train3, validData, validTarget, reg3)
+
+    loss_normal_test = MSE(w_normal_train, b_normal_train, testData, testTarget, reg)
+    loss_normal_test1 = MSE(w_normal_train1, b_normal_train1, testData, testTarget, reg1)
+    loss_normal_test2 = MSE(w_normal_train2, b_normal_train2, testData, testTarget, reg2)
+    loss_normal_test3 = MSE(w_normal_train3, b_normal_train3, testData, testTarget, reg3)
     
     w_normal_train = [w_normal_train]
     w_normal_train1 = [w_normal_train1]
@@ -209,7 +273,7 @@ def linreg():
     normal_accuracy_test2 = accuracy_calculation(w_normal_train2, b_normal_train2, testData, testTarget)
     normal_accuracy_test3 = accuracy_calculation(w_normal_train3, b_normal_train3, testData, testTarget)
 
-    print_info(loss_normal, normal_accuracy_train[0], normal_accuracy_valid[0], normal_accuracy_test[0], "normal", 0, reg, end - start)
-    print_info(loss_normal1, normal_accuracy_train1[0], normal_accuracy_valid1[0], normal_accuracy_test1[0], "normal", 0, reg1, end1 - start1)
-    print_info(loss_normal2, normal_accuracy_train2[0], normal_accuracy_valid2[0], normal_accuracy_test2[0], "normal", 0, reg2, end2 - start2)
-    print_info(loss_normal3, normal_accuracy_train3[0], normal_accuracy_valid3[0], normal_accuracy_test3[0], "normal", 0, reg3, end3 - start3)
+    print_info(loss_normal_train, loss_normal_valid, loss_normal_test, normal_accuracy_train[0], normal_accuracy_valid[0], normal_accuracy_test[0], "normal", 0, reg, end - start)
+    print_info(loss_normal_train1, loss_normal_valid1, loss_normal_test1, normal_accuracy_train1[0], normal_accuracy_valid1[0], normal_accuracy_test1[0], "normal", 0, reg1, end1 - start1)
+    print_info(loss_normal_train2, loss_normal_valid2, loss_normal_test2, normal_accuracy_train2[0], normal_accuracy_valid2[0], normal_accuracy_test2[0], "normal", 0, reg2, end2 - start2)
+    print_info(loss_normal_train3, loss_normal_valid3, loss_normal_test3, normal_accuracy_train3[0], normal_accuracy_valid3[0], normal_accuracy_test3[0], "normal", 0, reg3, end3 - start3)

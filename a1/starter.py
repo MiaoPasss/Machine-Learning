@@ -115,7 +115,7 @@ def buildGraph(loss="MSE"):
     )
     '''
 
-    W = tf.Variable(tf.truncated_normal([784, 1], 0, 0.5)
+    W = tf.Variable(tf.truncated_normal([784, 1], 0, 0.5))
     b = tf.Variable(0)
 
     x = tf.placeholder(tf.float32, shape = [None, 784])
@@ -145,3 +145,19 @@ def buildGraph(loss="MSE"):
         optimizer = tf.train.AdamOptimizer(0.001)
         optimizer = optimizer.minimize(loss)
         return W, b, y_hat, y, loss, optimizer
+
+
+def loss_calculation(W, b, x, y, reg, type="MSE"):
+    loss_record = []
+
+    if type is "MSE":
+        for i in range(len(W)):
+            loss = MSE(W[i], b[i], x, y, reg)
+            loss_record.append(loss)
+
+    elif type is "CE":
+        for i in range(len(W)):
+            loss = crossEntropyLoss(W[i], b[i], x, y, reg)
+            loss_record.append(loss)
+
+    return loss_record
