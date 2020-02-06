@@ -116,7 +116,7 @@ def buildGraph(loss="MSE"):
     '''
 
     W = tf.Variable(tf.truncated_normal([784, 1], 0, 0.5))
-    b = tf.Variable(0)
+    b = tf.Variable(0.0)
 
     x = tf.placeholder(tf.float32, shape = [None, 784])
     y = tf.placeholder(tf.float32, shape = [None, 1])
