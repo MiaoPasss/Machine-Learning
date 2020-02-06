@@ -134,7 +134,7 @@ def buildGraph(loss="MSE"):
 
         optimizer = tf.train.AdamOptimizer(0.001)
         optimizer = optimizer.minimize(loss)
-        return W, b, y_hat, y, loss, optimizer
+        return W, b, x, y, reg, y_hat, loss, optimizer
 
     elif loss == "CE":
         y_hat = 1 / (1 + tf.math.exp(-(x @ W + b)))
@@ -144,7 +144,7 @@ def buildGraph(loss="MSE"):
 
         optimizer = tf.train.AdamOptimizer(0.001)
         optimizer = optimizer.minimize(loss)
-        return W, b, y_hat, y, loss, optimizer
+        return W, b, x, y, reg, y_hat, loss, optimizer
 
 
 def loss_calculation(W, b, x, y, reg, type="MSE"):
