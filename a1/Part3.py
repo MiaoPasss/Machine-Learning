@@ -493,11 +493,11 @@ def SGD():
         weight_train = [weight_train]
         bias_train = [bias_train]
         accuracy_train10.append(accuracy_calculation(weight_train, bias_train, trainData, trainTarget)[0])
-        loss_train10.append(MSE(weight_train, bias_train, trainData, trainTarget, 0))
+        loss_train10.append(crossEntropyLoss(weight_train, bias_train, trainData, trainTarget, 0))
         accuracy_valid10.append(accuracy_calculation(weight_train, bias_train, validData, validTarget)[0])
-        loss_valid10.append(MSE(weight_train, bias_train, validData, validTarget, 0))
+        loss_valid10.append(crossEntropyLoss(weight_train, bias_train, validData, validTarget, 0))
         accuracy_test10.append(accuracy_calculation(weight_train, bias_train, testData, testTarget)[0])
-        loss_test10.append(MSE(weight_train, bias_train, testData, testTarget, 0))
+        loss_test10.append(crossEntropyLoss(weight_train, bias_train, testData, testTarget, 0))
     end10 = time.time()
 
     session.close()
@@ -572,11 +572,11 @@ def SGD():
         weight_train = [weight_train]
         bias_train = [bias_train]
         accuracy_train11.append(accuracy_calculation(weight_train, bias_train, trainData, trainTarget)[0])
-        loss_train11.append(MSE(weight_train, bias_train, trainData, trainTarget, 0))
+        loss_train11.append(crossEntropyLoss(weight_train, bias_train, trainData, trainTarget, 0))
         accuracy_valid11.append(accuracy_calculation(weight_train, bias_train, validData, validTarget)[0])
-        loss_valid11.append(MSE(weight_train, bias_train, validData, validTarget, 0))
+        loss_valid11.append(crossEntropyLoss(weight_train, bias_train, validData, validTarget, 0))
         accuracy_test11.append(accuracy_calculation(weight_train, bias_train, testData, testTarget)[0])
-        loss_test11.append(MSE(weight_train, bias_train, testData, testTarget, 0))
+        loss_test11.append(crossEntropyLoss(weight_train, bias_train, testData, testTarget, 0))
     end11 = time.time()
 
     session.close()
@@ -601,11 +601,11 @@ def SGD():
         weight_train = [weight_train]
         bias_train = [bias_train]
         accuracy_train12.append(accuracy_calculation(weight_train, bias_train, trainData, trainTarget)[0])
-        loss_train12.append(MSE(weight_train, bias_train, trainData, trainTarget, 0))
+        loss_train12.append(crossEntropyLoss(weight_train, bias_train, trainData, trainTarget, 0))
         accuracy_valid12.append(accuracy_calculation(weight_train, bias_train, validData, validTarget)[0])
-        loss_valid12.append(MSE(weight_train, bias_train, validData, validTarget, 0))
+        loss_valid12.append(crossEntropyLoss(weight_train, bias_train, validData, validTarget, 0))
         accuracy_test12.append(accuracy_calculation(weight_train, bias_train, testData, testTarget)[0])
-        loss_test12.append(MSE(weight_train, bias_train, testData, testTarget, 0))
+        loss_test12.append(crossEntropyLoss(weight_train, bias_train, testData, testTarget, 0))
     end12 = time.time()
 
     session.close()
@@ -630,11 +630,11 @@ def SGD():
         weight_train = [weight_train]
         bias_train = [bias_train]
         accuracy_train13.append(accuracy_calculation(weight_train, bias_train, trainData, trainTarget)[0])
-        loss_train13.append(MSE(weight_train, bias_train, trainData, trainTarget, 0))
+        loss_train13.append(crossEntropyLoss(weight_train, bias_train, trainData, trainTarget, 0))
         accuracy_valid13.append(accuracy_calculation(weight_train, bias_train, validData, validTarget)[0])
-        loss_valid13.append(MSE(weight_train, bias_train, validData, validTarget, 0))
+        loss_valid13.append(crossEntropyLoss(weight_train, bias_train, validData, validTarget, 0))
         accuracy_test13.append(accuracy_calculation(weight_train, bias_train, testData, testTarget)[0])
-        loss_test13.append(MSE(weight_train, bias_train, testData, testTarget, 0))
+        loss_test13.append(crossEntropyLoss(weight_train, bias_train, testData, testTarget, 0))
     end13 = time.time()
 
     session.close()

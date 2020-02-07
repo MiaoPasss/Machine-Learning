@@ -149,8 +149,13 @@ def buildGraph(loss="MSE", beta1=0.9, beta2=0.999, eps=1e-08):
         return W, b, x, y, reg, y_hat, loss, optimizer
 
     elif loss == "CE":
-        y_hat = 1 / (1 + tf.math.exp(-(x @ W + b)))
+        '''y_hat = 1 / (1 + tf.math.exp(-(x @ W + b)))
         ce_loss = tf.reduce_mean(-y * tf.math.log(y_hat) - (1 - y) * tf.math.log(1 - y_hat))
+        wd_loss = reg * tf.nn.l2_loss(W)
+        loss = ce_loss + wd_loss
+        '''
+        y_hat = x @ W + b
+        ce_loss = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(labels=y, logits=y_hat))
         wd_loss = reg * tf.nn.l2_loss(W)
         loss = ce_loss + wd_loss
 
