@@ -2,6 +2,7 @@ import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
 import math
+import starter
 
 def print_info(train_a, valid_a, test_a, type, batch_size, comp_time, beta1 = 0.9, beta2 = 0.999, eps = 1e-08):
     if type is "MSE":
@@ -697,9 +698,9 @@ def SGD():
     plt.legend(['Training Accuracy', 'Validation Accuracy', 'Test Accuracy'])
     plt.savefig('SGD_CE_accuracy_batch1750.png')
 
-    print_info(accuracy_train11[-1], accuracy_valid11[-1], accuracy_test11[-1], "CE", size1, end1 - start1)
-    print_info(accuracy_train12[-1], accuracy_valid12[-1], accuracy_test12[-1], "CE", size2, end2 - start2)
-    print_info(accuracy_train13[-1], accuracy_valid13[-1], accuracy_test13[-1], "CE", size3, end3 - start3)
+    print_info(accuracy_train11[-1], accuracy_valid11[-1], accuracy_test11[-1], "CE", size1, end11 - start11)
+    print_info(accuracy_train12[-1], accuracy_valid12[-1], accuracy_test12[-1], "CE", size2, end12 - start12)
+    print_info(accuracy_train13[-1], accuracy_valid13[-1], accuracy_test13[-1], "CE", size3, end13 - start13)
 
 
     accuracy_train14 = []
@@ -731,7 +732,7 @@ def SGD():
     session = tf.InteractiveSession()
     session.run(init)
 
-    start4 = time.time()
+    start14 = time.time()
     for _ in range(0, epochs):
         random_index = np.arange(3500)
         np.random.shuffle(random_index)
@@ -747,7 +748,7 @@ def SGD():
         accuracy_train14.append(accuracy_calculation(weight_train, bias_train, trainData, trainTarget)[0])
         accuracy_valid14.append(accuracy_calculation(weight_train, bias_train, validData, validTarget)[0])
         accuracy_test14.append(accuracy_calculation(weight_train, bias_train, testData, testTarget)[0])
-    end4 = time.time()
+    end14 = time.time()
 
     session.close()
 
@@ -757,7 +758,7 @@ def SGD():
     session = tf.InteractiveSession()
     session.run(init)
 
-    start5 = time.time()
+    start15 = time.time()
     for _ in range(0, epochs):
         random_index = np.arange(3500)
         np.random.shuffle(random_index)
@@ -773,7 +774,7 @@ def SGD():
         accuracy_train15.append(accuracy_calculation(weight_train, bias_train, trainData, trainTarget)[0])
         accuracy_valid15.append(accuracy_calculation(weight_train, bias_train, validData, validTarget)[0])
         accuracy_test15.append(accuracy_calculation(weight_train, bias_train, testData, testTarget)[0])
-    end5 = time.time()
+    end15 = time.time()
 
     session.close()
 
@@ -783,7 +784,7 @@ def SGD():
     session = tf.InteractiveSession()
     session.run(init)
 
-    start6 = time.time()
+    start16 = time.time()
     for _ in range(0, epochs):
         random_index = np.arange(3500)
         np.random.shuffle(random_index)
@@ -799,7 +800,7 @@ def SGD():
         accuracy_train16.append(accuracy_calculation(weight_train, bias_train, trainData, trainTarget)[0])
         accuracy_valid16.append(accuracy_calculation(weight_train, bias_train, validData, validTarget)[0])
         accuracy_test16.append(accuracy_calculation(weight_train, bias_train, testData, testTarget)[0])
-    end6 = time.time()
+    end16 = time.time()
 
     session.close()
 
@@ -809,7 +810,7 @@ def SGD():
     session = tf.InteractiveSession()
     session.run(init)
 
-    start7 = time.time()
+    start17 = time.time()
     for _ in range(0, epochs):
         random_index = np.arange(3500)
         np.random.shuffle(random_index)
@@ -825,7 +826,7 @@ def SGD():
         accuracy_train17.append(accuracy_calculation(weight_train, bias_train, trainData, trainTarget)[0])
         accuracy_valid17.append(accuracy_calculation(weight_train, bias_train, validData, validTarget)[0])
         accuracy_test17.append(accuracy_calculation(weight_train, bias_train, testData, testTarget)[0])
-    end7 = time.time()
+    end17 = time.time()
 
     session.close()
 
@@ -835,7 +836,7 @@ def SGD():
     session = tf.InteractiveSession()
     session.run(init)
 
-    start8 = time.time()
+    start18 = time.time()
     for _ in range(0, epochs):
         random_index = np.arange(3500)
         np.random.shuffle(random_index)
@@ -851,7 +852,7 @@ def SGD():
         accuracy_train18.append(accuracy_calculation(weight_train, bias_train, trainData, trainTarget)[0])
         accuracy_valid18.append(accuracy_calculation(weight_train, bias_train, validData, validTarget)[0])
         accuracy_test18.append(accuracy_calculation(weight_train, bias_train, testData, testTarget)[0])
-    end8 = time.time()
+    end18 = time.time()
 
     session.close()
 
@@ -861,7 +862,7 @@ def SGD():
     session = tf.InteractiveSession()
     session.run(init)
 
-    start9 = time.time()
+    start19 = time.time()
     for _ in range(0, epochs):
         random_index = np.arange(3500)
         np.random.shuffle(random_index)
@@ -877,14 +878,14 @@ def SGD():
         accuracy_train19.append(accuracy_calculation(weight_train, bias_train, trainData, trainTarget)[0])
         accuracy_valid19.append(accuracy_calculation(weight_train, bias_train, validData, validTarget)[0])
         accuracy_test19.append(accuracy_calculation(weight_train, bias_train, testData, testTarget)[0])
-    end9 = time.time()
+    end19 = time.time()
 
     session.close()
 
 
-    print_info(accuracy_train14[-1], accuracy_valid14[-1], accuracy_test14[-1], "CE", minibatch_size, end4 - start4, 0.95)
-    print_info(accuracy_train15[-1], accuracy_valid15[-1], accuracy_test15[-1], "CE", minibatch_size, end5 - start5, 0.99)
-    print_info(accuracy_train16[-1], accuracy_valid16[-1], accuracy_test16[-1], "CE", minibatch_size, end6 - start6, 0.9, 0.99)
-    print_info(accuracy_train17[-1], accuracy_valid17[-1], accuracy_test17[-1], "CE", minibatch_size, end7 - start7, 0.9, 0.9999)
-    print_info(accuracy_train18[-1], accuracy_valid18[-1], accuracy_test18[-1], "CE", minibatch_size, end8 - start8, 0.9, 0.999, 1e-09)
-    print_info(accuracy_train19[-1], accuracy_valid19[-1], accuracy_test19[-1], "CE", minibatch_size, end9 - start9, 0.9, 0.999, 1e-04)
+    print_info(accuracy_train14[-1], accuracy_valid14[-1], accuracy_test14[-1], "CE", minibatch_size, end14 - start14, 0.95)
+    print_info(accuracy_train15[-1], accuracy_valid15[-1], accuracy_test15[-1], "CE", minibatch_size, end15 - start15, 0.99)
+    print_info(accuracy_train16[-1], accuracy_valid16[-1], accuracy_test16[-1], "CE", minibatch_size, end16 - start16, 0.9, 0.99)
+    print_info(accuracy_train17[-1], accuracy_valid17[-1], accuracy_test17[-1], "CE", minibatch_size, end17 - start17, 0.9, 0.9999)
+    print_info(accuracy_train18[-1], accuracy_valid18[-1], accuracy_test18[-1], "CE", minibatch_size, end18 - start18, 0.9, 0.999, 1e-09)
+    print_info(accuracy_train19[-1], accuracy_valid19[-1], accuracy_test19[-1], "CE", minibatch_size, end19 - start19, 0.9, 0.999, 1e-04)
