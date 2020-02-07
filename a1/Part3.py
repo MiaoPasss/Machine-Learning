@@ -690,7 +690,7 @@ def SGD():
 
     plt.figure()
     plt.suptitle('Accuracy Curves: Minibatch SGD CE with batch size = 1750')
-    plt.plot(accuracy_train13,'',accuracy_valid3,'',accuracy_test3,'')
+    plt.plot(accuracy_train13,'',accuracy_valid13,'',accuracy_test13,'')
     plt.xlabel('epochs')
     plt.ylabel('accuracy')
     plt.grid()
