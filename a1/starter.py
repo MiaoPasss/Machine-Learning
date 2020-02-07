@@ -95,8 +95,8 @@ def crossEntropyLoss(W, b, x, y, reg):
 def gradCE(W, b, x, y, reg):
     N,n = x.shape
     y_hat = 1./(1 + np.exp(-(np.dot(x,W) + b)))
-    grad_weight = 1/N * np.dot(x.T, y - y_hat) + reg * W
-    grad_bias = 1/N * np.sum(y - y_hat)
+    grad_weight = 1/N * np.dot(x.T, y_hat - y) + reg * W
+    grad_bias = 1/N * np.sum(y_hat - y)
     return grad_weight, grad_bias
 
 def accuracy_calculation(W, b, x, y):
