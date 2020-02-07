@@ -103,7 +103,7 @@ def accuracy_calculation(W, b, x, y):
     acc = [np.sum((np.dot(x, W[i]) + b[i] >= 0.5) == y) / y.shape[0] for i in range(len(W))]
     return acc
     
-def buildGraph(loss="MSE"):
+def buildGraph(loss="MSE", beta1=0.9, beta2=0.999, eps=1e-07):
     '''
     tf.random.truncated_normal(
         shape,
@@ -124,6 +124,18 @@ def buildGraph(loss="MSE"):
 
     tf.set_random_seed(421)
 
+    '''
+    __init__(
+        learning_rate=0.001,
+        beta_1=0.9,
+        beta_2=0.999,
+        epsilon=1e-07,
+        amsgrad=False,
+        name='Adam',
+        **kwargs
+    )
+    '''
+
     #tf.nn.l2_loss computes half of the norm without square root
 
     if loss == "MSE":
@@ -132,7 +144,7 @@ def buildGraph(loss="MSE"):
         wd_loss = reg * tf.nn.l2_loss(W)
         loss = mse_loss + wd_loss
 
-        optimizer = tf.train.AdamOptimizer(0.001)
+        optimizer = tf.train.AdamOptimizer(0.001, beta1, beta2, eps)
         optimizer = optimizer.minimize(loss)
         return W, b, x, y, reg, y_hat, loss, optimizer
 
@@ -142,7 +154,7 @@ def buildGraph(loss="MSE"):
         wd_loss = reg * tf.nn.l2_loss(W)
         loss = ce_loss + wd_loss
 
-        optimizer = tf.train.AdamOptimizer(0.001)
+        optimizer = tf.train.AdamOptimizer(0.001, beta1, beta2, eps)
         optimizer = optimizer.minimize(loss)
         return W, b, x, y, reg, y_hat, loss, optimizer
 
