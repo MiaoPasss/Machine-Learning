@@ -74,10 +74,10 @@ def logreg():
     weight_train3, bias_train3, loss_train3 = grad_descent(init_weight, init_bias, trainData, trainTarget, alpha, epochs, reg1, error_tol, "MSE")
 
     plt.figure()
-    plt.suptitle('MSE and CE loss curves comparison')
+    plt.suptitle('CE and MSE loss curves comparison')
     plt.plot(loss_train2,'',loss_train3,'')
     plt.xlabel('epochs')
     plt.ylabel('losses')
     plt.grid()
-    plt.legend(['Mean Square Error', 'Cross Entropy'])
+    plt.legend(['Cross Entropy', 'Mean Square Error'])
     plt.savefig('MSE_CE_loss_compare.png')
