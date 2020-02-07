@@ -103,7 +103,7 @@ def accuracy_calculation(W, b, x, y):
     acc = [np.sum((np.dot(x, W[i]) + b[i] >= 0.5) == y) / y.shape[0] for i in range(len(W))]
     return acc
     
-def buildGraph(loss="MSE", beta1=0.9, beta2=0.999, eps=1e-07):
+def buildGraph(loss="MSE", beta1=0.9, beta2=0.999, eps=1e-08):
     '''
     tf.random.truncated_normal(
         shape,
