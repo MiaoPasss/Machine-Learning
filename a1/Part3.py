@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import math
 
-def print_info(train_a, valid_a, test_a, type, batch_size, comp_time, beta1 = 0.9, beta2 = 0.999, eps = 1e-07):
+def print_info(train_a, valid_a, test_a, type, batch_size, comp_time, beta1 = 0.9, beta2 = 0.999, eps = 1e-08):
     if type is "MSE":
         print('MSE SGD with minibatch size = {}, \u03B21 = {}, \u03B22 = {}, \u03B5 = {}, '
             'training accuracy = {}, valid accuracy = {}, test accuracy = {}, '
@@ -137,14 +137,14 @@ def SGD():
             minibatch_data = shuffled_data[i*size1:(i+1)*size1]
             minibatch_target = shuffled_target[i*size1:(i+1)*size1]
             _, weight_train, bias_train = session.run([optimizer, W, b], feed_dict={x: minibatch_data, y: minibatch_target, reg: 0})
+        loss_train1.append(MSE(weight_train, bias_train, trainData, trainTarget, 0))
+        loss_valid1.append(MSE(weight_train, bias_train, validData, validTarget, 0))
+        loss_test1.append(MSE(weight_train, bias_train, testData, testTarget, 0))
         weight_train = [weight_train]
         bias_train = [bias_train]
         accuracy_train1.append(accuracy_calculation(weight_train, bias_train, trainData, trainTarget)[0])
-        loss_train1.append(MSE(weight_train, bias_train, trainData, trainTarget, 0))
         accuracy_valid1.append(accuracy_calculation(weight_train, bias_train, validData, validTarget)[0])
-        loss_valid1.append(MSE(weight_train, bias_train, validData, validTarget, 0))
         accuracy_test1.append(accuracy_calculation(weight_train, bias_train, testData, testTarget)[0])
-        loss_test1.append(MSE(weight_train, bias_train, testData, testTarget, 0))
     end1 = time.time()
 
     session.close()
@@ -166,14 +166,14 @@ def SGD():
             minibatch_data = shuffled_data[i*size2:(i+1)*size2]
             minibatch_target = shuffled_target[i*size2:(i+1)*size2]
             _, weight_train, bias_train = session.run([optimizer, W, b], feed_dict={x: minibatch_data, y: minibatch_target, reg: 0})
+        loss_train2.append(MSE(weight_train, bias_train, trainData, trainTarget, 0))
+        loss_valid2.append(MSE(weight_train, bias_train, validData, validTarget, 0))
+        loss_test2.append(MSE(weight_train, bias_train, testData, testTarget, 0))
         weight_train = [weight_train]
         bias_train = [bias_train]
         accuracy_train2.append(accuracy_calculation(weight_train, bias_train, trainData, trainTarget)[0])
-        loss_train2.append(MSE(weight_train, bias_train, trainData, trainTarget, 0))
         accuracy_valid2.append(accuracy_calculation(weight_train, bias_train, validData, validTarget)[0])
-        loss_valid2.append(MSE(weight_train, bias_train, validData, validTarget, 0))
         accuracy_test2.append(accuracy_calculation(weight_train, bias_train, testData, testTarget)[0])
-        loss_test2.append(MSE(weight_train, bias_train, testData, testTarget, 0))
     end2 = time.time()
 
     session.close()
@@ -195,14 +195,14 @@ def SGD():
             minibatch_data = shuffled_data[i*size3:(i+1)*size3]
             minibatch_target = shuffled_target[i*size3:(i+1)*size3]
             _, weight_train, bias_train = session.run([optimizer, W, b], feed_dict={x: minibatch_data, y: minibatch_target, reg: 0})
+        loss_train3.append(MSE(weight_train, bias_train, trainData, trainTarget, 0))
+        loss_valid3.append(MSE(weight_train, bias_train, validData, validTarget, 0))
+        loss_test3.append(MSE(weight_train, bias_train, testData, testTarget, 0))
         weight_train = [weight_train]
         bias_train = [bias_train]
         accuracy_train3.append(accuracy_calculation(weight_train, bias_train, trainData, trainTarget)[0])
-        loss_train3.append(MSE(weight_train, bias_train, trainData, trainTarget, 0))
         accuracy_valid3.append(accuracy_calculation(weight_train, bias_train, validData, validTarget)[0])
-        loss_valid3.append(MSE(weight_train, bias_train, validData, validTarget, 0))
         accuracy_test3.append(accuracy_calculation(weight_train, bias_train, testData, testTarget)[0])
-        loss_test3.append(MSE(weight_train, bias_train, testData, testTarget, 0))
     end3 = time.time()
 
     session.close()
@@ -490,14 +490,15 @@ def SGD():
             minibatch_data = shuffled_data[i*minibatch_size:(i+1)*minibatch_size]
             minibatch_target = shuffled_target[i*minibatch_size:(i+1)*minibatch_size]
             _, weight_train, bias_train = session.run([optimizer, W, b], feed_dict={x: minibatch_data, y: minibatch_target, reg: 0})
+        loss_train10.append(crossEntropyLoss(weight_train, bias_train, trainData, trainTarget, 0))
+        loss_valid10.append(crossEntropyLoss(weight_train, bias_train, validData, validTarget, 0))
+        loss_test10.append(crossEntropyLoss(weight_train, bias_train, testData, testTarget, 0))
         weight_train = [weight_train]
         bias_train = [bias_train]
-        accuracy_train10.append(accuracy_calculation(weight_train, bias_train, trainData, trainTarget)[0])
-        loss_train10.append(crossEntropyLoss(weight_train, bias_train, trainData, trainTarget, 0))
+        accuracy_train10.append(accuracy_calculation(weight_train, bias_train, trainData, trainTarget)[0])     
         accuracy_valid10.append(accuracy_calculation(weight_train, bias_train, validData, validTarget)[0])
-        loss_valid10.append(crossEntropyLoss(weight_train, bias_train, validData, validTarget, 0))
         accuracy_test10.append(accuracy_calculation(weight_train, bias_train, testData, testTarget)[0])
-        loss_test10.append(crossEntropyLoss(weight_train, bias_train, testData, testTarget, 0))
+
     end10 = time.time()
 
     session.close()
@@ -569,14 +570,14 @@ def SGD():
             minibatch_data = shuffled_data[i*size1:(i+1)*size1]
             minibatch_target = shuffled_target[i*size1:(i+1)*size1]
             _, weight_train, bias_train = session.run([optimizer, W, b], feed_dict={x: minibatch_data, y: minibatch_target, reg: 0})
+        loss_train11.append(crossEntropyLoss(weight_train, bias_train, trainData, trainTarget, 0))
+        loss_valid11.append(crossEntropyLoss(weight_train, bias_train, validData, validTarget, 0))
+        loss_test11.append(crossEntropyLoss(weight_train, bias_train, testData, testTarget, 0))
         weight_train = [weight_train]
         bias_train = [bias_train]
         accuracy_train11.append(accuracy_calculation(weight_train, bias_train, trainData, trainTarget)[0])
-        loss_train11.append(crossEntropyLoss(weight_train, bias_train, trainData, trainTarget, 0))
         accuracy_valid11.append(accuracy_calculation(weight_train, bias_train, validData, validTarget)[0])
-        loss_valid11.append(crossEntropyLoss(weight_train, bias_train, validData, validTarget, 0))
         accuracy_test11.append(accuracy_calculation(weight_train, bias_train, testData, testTarget)[0])
-        loss_test11.append(crossEntropyLoss(weight_train, bias_train, testData, testTarget, 0))
     end11 = time.time()
 
     session.close()
@@ -598,14 +599,14 @@ def SGD():
             minibatch_data = shuffled_data[i*size2:(i+1)*size2]
             minibatch_target = shuffled_target[i*size2:(i+1)*size2]
             _, weight_train, bias_train = session.run([optimizer, W, b], feed_dict={x: minibatch_data, y: minibatch_target, reg: 0})
+        loss_train12.append(crossEntropyLoss(weight_train, bias_train, trainData, trainTarget, 0))
+        loss_valid12.append(crossEntropyLoss(weight_train, bias_train, validData, validTarget, 0))
+        loss_test12.append(crossEntropyLoss(weight_train, bias_train, testData, testTarget, 0))
         weight_train = [weight_train]
         bias_train = [bias_train]
         accuracy_train12.append(accuracy_calculation(weight_train, bias_train, trainData, trainTarget)[0])
-        loss_train12.append(crossEntropyLoss(weight_train, bias_train, trainData, trainTarget, 0))
         accuracy_valid12.append(accuracy_calculation(weight_train, bias_train, validData, validTarget)[0])
-        loss_valid12.append(crossEntropyLoss(weight_train, bias_train, validData, validTarget, 0))
         accuracy_test12.append(accuracy_calculation(weight_train, bias_train, testData, testTarget)[0])
-        loss_test12.append(crossEntropyLoss(weight_train, bias_train, testData, testTarget, 0))
     end12 = time.time()
 
     session.close()
@@ -627,14 +628,14 @@ def SGD():
             minibatch_data = shuffled_data[i*size3:(i+1)*size3]
             minibatch_target = shuffled_target[i*size3:(i+1)*size3]
             _, weight_train, bias_train = session.run([optimizer, W, b], feed_dict={x: minibatch_data, y: minibatch_target, reg: 0})
+        loss_train13.append(crossEntropyLoss(weight_train, bias_train, trainData, trainTarget, 0))
+        loss_valid13.append(crossEntropyLoss(weight_train, bias_train, validData, validTarget, 0))
+        loss_test13.append(crossEntropyLoss(weight_train, bias_train, testData, testTarget, 0))
         weight_train = [weight_train]
         bias_train = [bias_train]
         accuracy_train13.append(accuracy_calculation(weight_train, bias_train, trainData, trainTarget)[0])
-        loss_train13.append(crossEntropyLoss(weight_train, bias_train, trainData, trainTarget, 0))
         accuracy_valid13.append(accuracy_calculation(weight_train, bias_train, validData, validTarget)[0])
-        loss_valid13.append(crossEntropyLoss(weight_train, bias_train, validData, validTarget, 0))
         accuracy_test13.append(accuracy_calculation(weight_train, bias_train, testData, testTarget)[0])
-        loss_test13.append(crossEntropyLoss(weight_train, bias_train, testData, testTarget, 0))
     end13 = time.time()
 
     session.close()
