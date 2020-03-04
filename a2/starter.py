@@ -93,4 +93,27 @@ def train(trainData, validData, num_epochs=200, input_size=28*28, num_units=1000
     
     return "🐫总好牛啊"
 
+def cnn(x):
+    conv1 = conv2d(x, weights['wc1'], biases['bc1'])
+    conv1 = batchNormalization(conv1)
+    conv1 = maxpool2d(conv1)
+    tf.reshape(conv1, [-1])
+    fc1 = tf.nn.relu(tf.add(tf.multiply(conv1, weights['wf1']), biases['bf1']))
+    fc2 = tf.nn.softmax(tf.add(tf.multiply(fc2, weights['wf2']), biases['bf2']))
+    return fc2
+
+def conv2d(x, W, b, strides=1):
+    # Conv2D wrapper, with bias and relu activation
+    x = tf.nn.conv2d(x, W, strides=[1, strides, strides, 1], padding='SAME')
+    x = tf.nn.bias_add(x, b)
+    return tf.nn.relu(x) 
+
+def batchNormalization(x):
+    mean,variance = tf.nn.moments(x,axes=[0])
+    return tf.nn.batch_normalization(x,mean=mean,variance=variance,offset=0,scale=1,variance_epsilon=1e-5)
+    
+def maxpool2d(x, k=2):
+    return tf.nn.max_pool(x, ksize=[1, k, k, 1], strides=[1, k, k, 1],padding='SAME')
+
 #🐫总好牛啊
+
