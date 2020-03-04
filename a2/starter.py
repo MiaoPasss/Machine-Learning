@@ -61,7 +61,7 @@ def CE(target, prediction):
 def gradCE(target, prediction):
     return -np.divide(target, prediction) / prediction.shape[0]
 
-def train(trainData, validData, num_epochs=200, input_size=28*28, num_units=1000, alpha = 1e-5, gamma = 0.99, class_num = 10):
+def train(trainData, trainTarget, num_epochs=200, input_size=28*28, num_units=1000, alpha = 1e-5, gamma = 0.99, class_num = 10):
     weight_hidden = np.random.normal(loc=0,scale=np.sqrt(2/(input_size+num_units)),size=(input_size,num_units))
     weight_output = np.random.normal(loc=0,scale=np.sqrt(2/(num_units+class_num)),size=(num_units,class_num))
     bias_hidden = np.random.normal(loc=0,scale=np.sqrt(2/(input_size+num_units)),size=(1,num_units))
@@ -93,6 +93,32 @@ def train(trainData, validData, num_epochs=200, input_size=28*28, num_units=1000
     
     return "🐫总好牛啊"
 
+def train🐫tensorflow(trainData, trainTarget, num_epochs=50):
+    init = tf.global_variables_initializer()
+    session = tf.InteractiveSession()
+    session.run(init)
+    
+    data = tf.placeholder(tf.float32, shape = [32,28,28,1])
+    target = tf.placeholder(tf.float32, shape = [32,10])
+    prediction = cnn(data)
+    loss = tf.losses.softmax_cross_entropy(target,prediction)
+    actual_label = tf.math.argmax(target, axis=1)
+    predict_label = tf.math.argmax(prediction, axis=1)
+    accuracy = tf.count_nonzero(tf.math.equal(actual_label, predict_label)) / 32
+    optimizer = tf.train.AdamOptimizer(1e-4)
+    optimizer = optimizer.minimize(loss)
+    
+    iteration = trainData.shape[0] / 32
+    for _ in range(num_epochs):
+        for i in range(iteration):
+            batchData = trainData[i*32:(i+1)*32]
+            batchTarget = trainTarget[i*32:(i+1)*32]
+            op = session.run([optimizer], feed_dict={data:batchData, target:batchTarget})
+        accuracy, loss = session.run([accuracy, loss], feed_dict={data:batchData, target:batchTarget})
+        
+    return "🐫总好牛啊"
+        
+    
 def cnn(x):
     conv1 = conv2d(x, weights['wc1'], biases['bc1'])
     conv1 = batchNormalization(conv1)
