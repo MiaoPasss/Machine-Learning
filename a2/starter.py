@@ -134,6 +134,16 @@ def train_tensorflow(trainData, trainTarget, num_epochs=50):
 
 
 def cnn(x):
+    weights = {
+        'wc1': tf.get_variable('W0', shape=(3,3,1,32), initializer=tf.contrib.layers.xavier_initializer()), 
+        'wf1': tf.get_variable('W1', shape=(14*14*32,784), initializer=tf.contrib.layers.xavier_initializer()), 
+        'wf2': tf.get_variable('W2', shape=(784,10), initializer=tf.contrib.layers.xavier_initializer())
+    }
+    biases = {
+        'bc1': tf.get_variable('B0', shape=(32), initializer=tf.contrib.layers.xavier_initializer()),
+        'bf1': tf.get_variable('B1', shape=(784), initializer=tf.contrib.layers.xavier_initializer()),
+        'bf2': tf.get_variable('B2', shape=(10), initializer=tf.contrib.layers.xavier_initializer())
+    }
     conv1 = conv2d(x, weights['wc1'], biases['bc1'])
     conv1 = batchNormalization(conv1)
     conv1 = maxpool2d(conv1)
