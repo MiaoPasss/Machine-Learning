@@ -74,8 +74,8 @@ def train(trainData, trainTarget, validData, testData, num_epochs=200, input_siz
     valid_record = []
     test_record = []
 
-    for iii in range(10):
-        print(iii)
+    for iii in range(num_epochs):
+        print(iii, end = ' ')
 
         output_hidden1 = relu(computeLayer(validData, weight_hidden, bias_hidden))
         prediction1 = softmax(computeLayer(output_hidden1, weight_output, bias_output))
@@ -106,6 +106,8 @@ def train(trainData, trainTarget, validData, testData, num_epochs=200, input_siz
         weight_hidden = weight_hidden - nu_new_hidden
         bias_hidden = bias_hidden - alpha * b_h
 
+    print('')
+
     return train_record, valid_record, test_record
 
 def train_tensorflow(trainData, trainTarget, num_epochs=50):
@@ -123,21 +125,27 @@ def train_tensorflow(trainData, trainTarget, num_epochs=50):
     session = tf.InteractiveSession()
     session.run(init)
 
+    accuracy_record = []
+    loss_record = []
+
     iteration = trainData.shape[0] / 32
-    for _ in range(num_epochs):
+    for iii in range(num_epochs):
+        print(iii)
         for i in range(iteration):
             batchData = trainData[i*32:(i+1)*32]
             batchTarget = trainTarget[i*32:(i+1)*32]
             op = session.run([optimizer], feed_dict={data:batchData, target:batchTarget})
         accuracy, loss = session.run([accuracy, loss], feed_dict={data:batchData, target:batchTarget})
+        accuracy_record.append(accuracy)
+        loss_record.append(loss)
 
-    return "🐫总好牛啊"
+    return loss_record, accuracy_record
 
 
 def cnn(x):
     weights = {
-        'wc1': tf.get_variable('W0', shape=(3,3,1,32), initializer=tf.contrib.layers.xavier_initializer()), 
-        'wf1': tf.get_variable('W1', shape=(14*14*32,784), initializer=tf.contrib.layers.xavier_initializer()), 
+        'wc1': tf.get_variable('W0', shape=(3,3,1,32), initializer=tf.contrib.layers.xavier_initializer()),
+        'wf1': tf.get_variable('W1', shape=(14*14*32,784), initializer=tf.contrib.layers.xavier_initializer()),
         'wf2': tf.get_variable('W2', shape=(784,10), initializer=tf.contrib.layers.xavier_initializer())
     }
     biases = {
@@ -149,13 +157,13 @@ def cnn(x):
     conv1 = batchNormalization(conv1)
     conv1 = maxpool2d(conv1)
     conv1 = tf.reshape(conv1, [-1])
-    fc1 = tf.nn.relu(tf.add(tf.linalg.matmul(conv1, weights['wf1']), biases['bf1']))
-    fc2 = tf.nn.softmax(tf.add(tf.linalg.matmul(fc1, weights['wf2']), biases['bf2']))
+    fc1 = tf.nn.relu(tf.add(tf.linalg.matmul(conv1, wf1), bf1))
+    fc2 = tf.nn.softmax(tf.add(tf.linalg.matmul(fc1, wf2), bf2))
     return fc2
 
-def conv2d(x, W, b, strides=1):
+def conv2d(x, filt, b, strides=1):
     # Conv2D wrapper, with bias and relu activation
-    x = tf.nn.conv2d(x, W, strides=[1, strides, strides, 1], padding='SAME')
+    x = tf.nn.conv2d(x, filt, strides=[1, strides, strides, 1], padding='SAME')
     x = tf.nn.bias_add(x, b)
     return tf.nn.relu(x)
 
@@ -172,10 +180,28 @@ def accuracy_calculation(target, record):
         pred = np.argmax(i, axis=1)
         comparison = pred - target
         comparison = np.where(comparison != 0, 0, 1)
-        print("{} / {}".format(np.sum(comparison), target.shape[0]))
         percentage = np.sum(comparison) / target.shape[0]
         acc.append(percentage)
-    return acc
+
+    i = 0
+    flag = False
+
+    while True:
+
+        for p in range(1,11):
+            if acc[i+p] > acc[i]:
+                i = i+p
+                break
+            if i+p == len(acc) - 1 or p == 10:
+                flag = True
+                break
+
+        if i == len(acc) - 1:
+            flag = True
+
+        if flag == True:
+            return acc, i
+
 
 def loss_calculation(target, record):
     loss_record = []
