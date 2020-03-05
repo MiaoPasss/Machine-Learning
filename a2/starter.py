@@ -94,10 +94,6 @@ def train(trainData, trainTarget, num_epochs=200, input_size=28*28, num_units=10
     return "🐫总好牛啊"
 
 def train🐫tensorflow(trainData, trainTarget, num_epochs=50):
-    init = tf.global_variables_initializer()
-    session = tf.InteractiveSession()
-    session.run(init)
-    
     data = tf.placeholder(tf.float32, shape = [32,28,28,1])
     target = tf.placeholder(tf.float32, shape = [32,10])
     prediction = cnn(data)
@@ -107,6 +103,10 @@ def train🐫tensorflow(trainData, trainTarget, num_epochs=50):
     accuracy = tf.count_nonzero(tf.math.equal(actual_label, predict_label)) / 32
     optimizer = tf.train.AdamOptimizer(1e-4)
     optimizer = optimizer.minimize(loss)
+    
+    init = tf.global_variables_initializer()
+    session = tf.InteractiveSession()
+    session.run(init)
     
     iteration = trainData.shape[0] / 32
     for _ in range(num_epochs):
@@ -123,9 +123,9 @@ def cnn(x):
     conv1 = conv2d(x, weights['wc1'], biases['bc1'])
     conv1 = batchNormalization(conv1)
     conv1 = maxpool2d(conv1)
-    tf.reshape(conv1, [-1])
-    fc1 = tf.nn.relu(tf.add(tf.multiply(conv1, weights['wf1']), biases['bf1']))
-    fc2 = tf.nn.softmax(tf.add(tf.multiply(fc2, weights['wf2']), biases['bf2']))
+    conv1 = tf.reshape(conv1, [-1])
+    fc1 = tf.nn.relu(tf.add(tf.linalg.matmul(conv1, weights['wf1']), biases['bf1']))
+    fc2 = tf.nn.softmax(tf.add(tf.linalg.matmul(fc1, weights['wf2']), biases['bf2']))
     return fc2
 
 def conv2d(x, W, b, strides=1):
