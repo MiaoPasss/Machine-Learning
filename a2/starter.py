@@ -82,7 +82,7 @@ def train(trainData, trainTarget, num_epochs=200, input_size=28*28, num_units=10
         nu_old_output = nu_new_output
         weight_output = weight_output - nu_new_output
         bias_output = bias_output - alpha * b_o
-    
+
         gradient_h = np.matmul(gradient_o, weight_output.T)
         w_h = np.matmul(np.array(trainData).T, np.where(output_hidden < 0, 0, gradient_h)) / prediction.shape[0]
         b_h = np.average(np.where(output_hidden < 0, 0, gradient_h),axis=0)
@@ -90,8 +90,8 @@ def train(trainData, trainTarget, num_epochs=200, input_size=28*28, num_units=10
         nu_old_hidden = nu_new_hidden
         weight_hidden = weight_hidden - nu_new_hidden
         bias_hidden = bias_hidden - alpha * b_h
-    
-    return "🐫总好牛啊"
+
+    return train_record, valid_record, test_record
 
 def train🐫tensorflow(trainData, trainTarget, num_epochs=50):
     data = tf.placeholder(tf.float32, shape = [32,28,28,1])
@@ -103,11 +103,11 @@ def train🐫tensorflow(trainData, trainTarget, num_epochs=50):
     accuracy = tf.count_nonzero(tf.math.equal(actual_label, predict_label)) / 32
     optimizer = tf.train.AdamOptimizer(1e-4)
     optimizer = optimizer.minimize(loss)
-    
+
     init = tf.global_variables_initializer()
     session = tf.InteractiveSession()
     session.run(init)
-    
+
     iteration = trainData.shape[0] / 32
     for _ in range(num_epochs):
         for i in range(iteration):
@@ -115,10 +115,10 @@ def train🐫tensorflow(trainData, trainTarget, num_epochs=50):
             batchTarget = trainTarget[i*32:(i+1)*32]
             op = session.run([optimizer], feed_dict={data:batchData, target:batchTarget})
         accuracy, loss = session.run([accuracy, loss], feed_dict={data:batchData, target:batchTarget})
-        
+
     return "🐫总好牛啊"
-        
-    
+
+
 def cnn(x):
     conv1 = conv2d(x, weights['wc1'], biases['bc1'])
     conv1 = batchNormalization(conv1)
@@ -132,14 +132,13 @@ def conv2d(x, W, b, strides=1):
     # Conv2D wrapper, with bias and relu activation
     x = tf.nn.conv2d(x, W, strides=[1, strides, strides, 1], padding='SAME')
     x = tf.nn.bias_add(x, b)
-    return tf.nn.relu(x) 
+    return tf.nn.relu(x)
 
 def batchNormalization(x):
     mean,variance = tf.nn.moments(x,axes=[0])
     return tf.nn.batch_normalization(x,mean=mean,variance=variance,offset=0,scale=1,variance_epsilon=1e-5)
-    
+
 def maxpool2d(x, k=2):
     return tf.nn.max_pool(x, ksize=[1, k, k, 1], strides=[1, k, k, 1],padding='SAME')
 
 #🐫总好牛啊
-
