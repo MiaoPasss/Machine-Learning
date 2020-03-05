@@ -56,12 +56,12 @@ def computeLayer(X, W, b):
     return np.add(np.matmul(W,X), b)
 
 def CE(target, prediction):
-    return np.matmul(target.flatten(),np.log(prediction.flatten())) / prediction.shape[0]
+    return (-1) * np.matmul(target.flatten(),np.log(prediction.flatten())) / prediction.shape[0]
 
 def gradCE(target, prediction):
-    return -np.divide(target, prediction) / prediction.shape[0]
+    return target - prediction
 
-def train(trainData, trainTarget, num_epochs=200, input_size=28*28, num_units=1000, alpha = 1e-5, gamma = 0.99, class_num = 10):
+def train(trainData, trainTarget, validData, validTarget, testData, testTarget, num_epochs=200, input_size=28*28, num_units=1000, alpha = 1e-5, gamma = 0.99, class_num = 10):
     weight_hidden = np.random.normal(loc=0,scale=np.sqrt(2/(input_size+num_units)),size=(input_size,num_units))
     weight_output = np.random.normal(loc=0,scale=np.sqrt(2/(num_units+class_num)),size=(num_units,class_num))
     bias_hidden = np.random.normal(loc=0,scale=np.sqrt(2/(input_size+num_units)),size=(1,num_units))
@@ -71,9 +71,22 @@ def train(trainData, trainTarget, num_epochs=200, input_size=28*28, num_units=10
     nu_new_hidden = np.zeros(shape=(input_size,num_units))
     nu_new_output = np.zeros(shape=(num_units,class_num))
 
-    for _ in range(1,num_epochs):
+    train_record = []
+    valid_record = []
+    test_record = []
+
+    for _ in range(num_epochs):
+        output_hidden = relu(computeLayer(np.array(validData), weight_hidden, bias_hidden))
+        prediction = softmax(computeLayer(output_hidden, weight_output, bias_output))
+        valid_record.append(prediction)
+
+        output_hidden = relu(computeLayer(np.array(testData), weight_hidden, bias_hidden))
+        prediction = softmax(computeLayer(output_hidden, weight_output, bias_output))
+        test_record.append(prediction)
+
         output_hidden = relu(computeLayer(np.array(trainData), weight_hidden, bias_hidden))
         prediction = softmax(computeLayer(output_hidden, weight_output, bias_output))
+        train_record.append(prediction)
 
         gradient_o = gradCE(np.array(trainTarget), prediction)
         w_o = np.matmul(output_hidden.T, gradient_o) / prediction.shape[0]
