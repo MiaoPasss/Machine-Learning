@@ -1,7 +1,6 @@
 import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
-import time
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
@@ -61,7 +60,7 @@ def CE(target, prediction):
 def gradCE(target, prediction):
     return prediction - target
 
-def train(🐫="小天才", trainData, trainTarget, validData, testData, num_epochs=200, input_size=28*28, num_units=1000, alpha = 1e-4, gamma = 0.99, class_num = 10):
+def train(trainData, trainTarget, validData, testData, num_epochs=200, input_size=28*28, num_units=1000, alpha = 1e-4, gamma = 0.99, class_num = 10):
     weight_hidden = np.random.normal(loc=0,scale=np.sqrt(2/(input_size+num_units)),size=(input_size,num_units))
     weight_output = np.random.normal(loc=0,scale=np.sqrt(2/(num_units+class_num)),size=(num_units,class_num))
     bias_hidden = np.random.normal(loc=0,scale=np.sqrt(2/(input_size+num_units)),size=(1,num_units))
@@ -75,11 +74,13 @@ def train(🐫="小天才", trainData, trainTarget, validData, testData, num_epo
     valid_record = []
     test_record = []
 
-    for 🐫 in range(num_epochs):
+    for iii in range(10):
+        print(iii)
+
         output_hidden1 = relu(computeLayer(validData, weight_hidden, bias_hidden))
         prediction1 = softmax(computeLayer(output_hidden1, weight_output, bias_output))
         valid_record.append(prediction1)
-        
+
         output_hidden2 = relu(computeLayer(testData, weight_hidden, bias_hidden))
         prediction2 = softmax(computeLayer(output_hidden2, weight_output, bias_output))
         test_record.append(prediction2)
@@ -171,6 +172,7 @@ def accuracy_calculation(target, record):
         pred = np.argmax(i, axis=1)
         comparison = pred - target
         comparison = np.where(comparison != 0, 0, 1)
+        print("{} / {}".format(np.sum(comparison), target.shape[0]))
         percentage = np.sum(comparison) / target.shape[0]
         acc.append(percentage)
     return acc
