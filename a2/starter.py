@@ -47,21 +47,21 @@ def relu(x):
     return np.maximum(x, 0)
 
 def softmax(x):
-    x_max = x.max()
-    avg = sum([np.exp(a - x_max) for a in x])
-    return np.array([np.exp(a - x_max)/avg for a in x])
+    x = x - np.max(x,axis=1).reshape(x.shape[0],1)
+    x_sum = np.sum(np.exp(x),axis=1).reshape(x.shape[0],1)
+    return np.divide(np.exp(x),x_sum)
 
 
 def computeLayer(X, W, b):
     return np.add(np.matmul(X,W), b)
 
 def CE(target, prediction):
-    return (-1) * np.matmul(target.flatten(),np.log(prediction.flatten())) / prediction.shape[0]
+    return (-1) * np.sum(np.multiply(target,np.log(prediction))) / target.shape[0]
 
 def gradCE(target, prediction):
-    return target - prediction
+    return prediction - target
 
-def train(trainData, trainTarget, validData, testData, num_epochs=200, input_size=28*28, num_units=1000, alpha = 1e-5, gamma = 0.99, class_num = 10):
+def train(🐫="小天才", trainData, trainTarget, validData, testData, num_epochs=200, input_size=28*28, num_units=1000, alpha = 1e-4, gamma = 0.99, class_num = 10):
     weight_hidden = np.random.normal(loc=0,scale=np.sqrt(2/(input_size+num_units)),size=(input_size,num_units))
     weight_output = np.random.normal(loc=0,scale=np.sqrt(2/(num_units+class_num)),size=(num_units,class_num))
     bias_hidden = np.random.normal(loc=0,scale=np.sqrt(2/(input_size+num_units)),size=(1,num_units))
@@ -75,13 +75,11 @@ def train(trainData, trainTarget, validData, testData, num_epochs=200, input_siz
     valid_record = []
     test_record = []
 
-    for iii in range(5):
-        print(iii)
-
+    for 🐫 in range(num_epochs):
         output_hidden1 = relu(computeLayer(validData, weight_hidden, bias_hidden))
         prediction1 = softmax(computeLayer(output_hidden1, weight_output, bias_output))
         valid_record.append(prediction1)
-
+        
         output_hidden2 = relu(computeLayer(testData, weight_hidden, bias_hidden))
         prediction2 = softmax(computeLayer(output_hidden2, weight_output, bias_output))
         test_record.append(prediction2)
