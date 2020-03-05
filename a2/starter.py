@@ -44,7 +44,7 @@ def shuffle(trainData, trainTarget):
 
 
 def relu(x):
-    return np.array([max(a,0) for a in x])
+    return np.maximum(x, 0)
 
 def softmax(x):
     x_max = x.max()
@@ -53,7 +53,7 @@ def softmax(x):
 
 
 def computeLayer(X, W, b):
-    return np.add(np.matmul(W,X), b)
+    return np.add(np.matmul(X,W), b)
 
 def CE(target, prediction):
     return (-1) * np.matmul(target.flatten(),np.log(prediction.flatten())) / prediction.shape[0]
@@ -61,7 +61,7 @@ def CE(target, prediction):
 def gradCE(target, prediction):
     return target - prediction
 
-def train(trainData, trainTarget, validData, validTarget, testData, testTarget, num_epochs=200, input_size=28*28, num_units=1000, alpha = 1e-5, gamma = 0.99, class_num = 10):
+def train(trainData, trainTarget, validData, testData, num_epochs=200, input_size=28*28, num_units=1000, alpha = 1e-5, gamma = 0.99, class_num = 10):
     weight_hidden = np.random.normal(loc=0,scale=np.sqrt(2/(input_size+num_units)),size=(input_size,num_units))
     weight_output = np.random.normal(loc=0,scale=np.sqrt(2/(num_units+class_num)),size=(num_units,class_num))
     bias_hidden = np.random.normal(loc=0,scale=np.sqrt(2/(input_size+num_units)),size=(1,num_units))
@@ -75,18 +75,21 @@ def train(trainData, trainTarget, validData, validTarget, testData, testTarget, 
     valid_record = []
     test_record = []
 
-    for _ in range(num_epochs):
-        output_hidden = relu(computeLayer(np.array(validData), weight_hidden, bias_hidden))
-        prediction = softmax(computeLayer(output_hidden, weight_output, bias_output))
-        valid_record.append(prediction)
+    for iii in range(5):
+        print(iii)
 
-        output_hidden = relu(computeLayer(np.array(testData), weight_hidden, bias_hidden))
-        prediction = softmax(computeLayer(output_hidden, weight_output, bias_output))
-        test_record.append(prediction)
+        output_hidden1 = relu(computeLayer(validData, weight_hidden, bias_hidden))
+        prediction1 = softmax(computeLayer(output_hidden1, weight_output, bias_output))
+        valid_record.append(prediction1)
 
-        output_hidden = relu(computeLayer(np.array(trainData), weight_hidden, bias_hidden))
+        output_hidden2 = relu(computeLayer(testData, weight_hidden, bias_hidden))
+        prediction2 = softmax(computeLayer(output_hidden2, weight_output, bias_output))
+        test_record.append(prediction2)
+
+        output_hidden = relu(computeLayer(trainData, weight_hidden, bias_hidden))
         prediction = softmax(computeLayer(output_hidden, weight_output, bias_output))
         train_record.append(prediction)
+
 
         gradient_o = gradCE(np.array(trainTarget), prediction)
         w_o = np.matmul(output_hidden.T, gradient_o) / prediction.shape[0]
@@ -106,7 +109,7 @@ def train(trainData, trainTarget, validData, validTarget, testData, testTarget, 
 
     return train_record, valid_record, test_record
 
-def train🐫tensorflow(trainData, trainTarget, num_epochs=50):
+def train_tensorflow(trainData, trainTarget, num_epochs=50):
     data = tf.placeholder(tf.float32, shape = [32,28,28,1])
     target = tf.placeholder(tf.float32, shape = [32,10])
     prediction = cnn(data)
@@ -154,4 +157,22 @@ def batchNormalization(x):
 def maxpool2d(x, k=2):
     return tf.nn.max_pool(x, ksize=[1, k, k, 1], strides=[1, k, k, 1],padding='SAME')
 
+def accuracy_calculation(target, record):
+    acc = []
+    for i in record:
+        pred = np.argmax(i, axis=1)
+        comparison = pred - target
+        comparison = np.where(comparison != 0, 0, 1)
+        percentage = np.sum(comparison) / target.shape[0]
+        acc.append(percentage)
+    return acc
+
+def loss_calculation(target, record):
+    loss_record = []
+
+    for i in range(len(record)):
+            loss = CE(target, record[i])
+            loss_record.append(loss)
+
+    return loss_record
 #🐫总好牛啊
