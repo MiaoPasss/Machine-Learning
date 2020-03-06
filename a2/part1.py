@@ -14,6 +14,7 @@ def part1():
     #1.3
 
     train_record, valid_record, test_record = train(trainData, newtrain, validData, testData)
+    print('')
 
     loss_train = loss_calculation(newtrain, train_record)
     loss_valid = loss_calculation(newvalid, valid_record)
@@ -41,6 +42,23 @@ def part1():
     plt.grid()
     plt.legend(['Training Accuracy', 'Validation Accuracy', 'Test Accuracy'])
     plt.savefig('Cross_Entropy_accuracy.png')
+
+    #1.4.1
+
+    _, _, test_record = train(trainData, newtrain, validData, testData, 100)
+    print('')
+    accuracy_test1, _ = accuracy_calculation(testTarget, test_record)
+    print('Number of Hidden Units = 100, final test accuracy = {}'.format(accuracy_test1[-1]))
+
+    _, _, test_record = train(trainData, newtrain, validData, testData, 500)
+    print('')
+    accuracy_test2, _ = accuracy_calculation(testTarget, test_record)
+    print('Number of Hidden Units = 500, final test accuracy = {}'.format(accuracy_test2[-1]))
+
+    _, _, test_record = train(trainData, newtrain, validData, testData, 2000)
+    print('')
+    accuracy_test3, _ = accuracy_calculation(testTarget, test_record)
+    print('Number of Hidden Units = 2000, final test accuracy = {}'.format(accuracy_test3[-1]))
 
 
     #1.4.2

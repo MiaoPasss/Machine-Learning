@@ -60,7 +60,7 @@ def CE(target, prediction):
 def gradCE(target, prediction):
     return prediction - target
 
-def train(trainData, trainTarget, validData, testData, num_epochs=200, input_size=28*28, num_units=1000, alpha = 1e-4, gamma = 0.99, class_num = 10):
+def train(trainData, trainTarget, validData, testData, num_units=1000, num_epochs=200, input_size=28*28, alpha = 1e-4, gamma = 0.99, class_num = 10):
     weight_hidden = np.random.normal(loc=0,scale=np.sqrt(2/(input_size+num_units)),size=(input_size,num_units))
     weight_output = np.random.normal(loc=0,scale=np.sqrt(2/(num_units+class_num)),size=(num_units,class_num))
     bias_hidden = np.random.normal(loc=0,scale=np.sqrt(2/(input_size+num_units)),size=(1,num_units))
@@ -106,15 +106,14 @@ def train(trainData, trainTarget, validData, testData, num_epochs=200, input_siz
         weight_hidden = weight_hidden - nu_new_hidden
         bias_hidden = bias_hidden - alpha * b_h
 
-    print('')
 
     return train_record, valid_record, test_record
 
-def train_tensorflow(trainData, trainTarget, num_epochs=50):
+def train_tensorflow(weights, biases, trainData, trainTarget, validData, validTarget, testData, testTarget, reg=0, keep_rate=1, num_epochs=50):
     data = tf.placeholder(tf.float32, shape = [32,28,28,1])
     target = tf.placeholder(tf.float32, shape = [32,10])
-    prediction = cnn(data)
-    loss = tf.losses.softmax_cross_entropy(target,prediction)
+    prediction, d1, d2 = cnn(weights, biases, data, 1-keep_rate)
+    loss = tf.losses.softmax_cross_entropy(target,prediction) + reg * (d1 + d2)
     actual_label = tf.math.argmax(target, axis=1)
     predict_label = tf.math.argmax(prediction, axis=1)
     accuracy = tf.count_nonzero(tf.math.equal(actual_label, predict_label)) / 32
@@ -125,41 +124,68 @@ def train_tensorflow(trainData, trainTarget, num_epochs=50):
     session = tf.InteractiveSession()
     session.run(init)
 
-    accuracy_record = []
-    loss_record = []
+    accuracy_train = []
+    loss_train = []
+    accuracy_valid = []
+    loss_valid = []
+    accuracy_test = []
+    loss_test = []
 
-    iteration = trainData.shape[0] / 32
+    iteration1 = trainData.shape[0] / 32
+    iteration2 = validData.shape[0] / 32
+    iteration3 = testData.shape[0] / 32
     for iii in range(num_epochs):
-        print(iii)
-        for i in range(iteration):
-            batchData = trainData[i*32:(i+1)*32]
+        shuffle(trainData, trainTarget)
+        print(iii, end = ' ')
+
+        accuracy_record = []
+        loss_record = []
+        for i in range(int(iteration1)):
+            batchData = trainData[i*32:(i+1)*32].reshape((32, 28, 28, 1))
             batchTarget = trainTarget[i*32:(i+1)*32]
-            op = session.run([optimizer], feed_dict={data:batchData, target:batchTarget})
-        accuracy, loss = session.run([accuracy, loss], feed_dict={data:batchData, target:batchTarget})
-        accuracy_record.append(accuracy)
-        loss_record.append(loss)
+            op = session.run([optimizer], feed_dict={data:batchData, target:batchTarget}) # training is only done with training data
+            acc, los = session.run([accuracy, loss], feed_dict={data:batchData, target:batchTarget})
+            accuracy_record.append(acc)
+            loss_record.append(los)
+        accuracy_train.append(sum(accuracy_record) / int(iteration1))
+        loss_train.append(sum(loss_record) / int(iteration1))
 
-    return loss_record, accuracy_record
+        accuracy_record = []
+        loss_record = []
+        for i in range(int(iteration2)):
+            batchData = validData[i*32:(i+1)*32].reshape((32, 28, 28, 1))
+            batchTarget = validTarget[i*32:(i+1)*32]
+            acc, los = session.run([accuracy, loss], feed_dict={data:batchData, target:batchTarget})
+            accuracy_record.append(acc)
+            loss_record.append(los)
+        accuracy_valid.append(sum(accuracy_record) / int(iteration2))
+        loss_valid.append(sum(loss_record) / int(iteration2))
+
+        accuracy_record = []
+        loss_record = []
+        for i in range(int(iteration3)):
+            batchData = testData[i*32:(i+1)*32].reshape((32, 28, 28, 1))
+            batchTarget = testTarget[i*32:(i+1)*32]
+            acc, los = session.run([accuracy, loss], feed_dict={data:batchData, target:batchTarget})
+            accuracy_record.append(acc)
+            loss_record.append(los)
+        accuracy_test.append(sum(accuracy_record) / int(iteration3))
+        loss_test.append(sum(loss_record) / int(iteration3))
 
 
-def cnn(x):
-    weights = {
-        'wc1': tf.get_variable('W0', shape=(3,3,1,32), initializer=tf.contrib.layers.xavier_initializer()),
-        'wf1': tf.get_variable('W1', shape=(14*14*32,784), initializer=tf.contrib.layers.xavier_initializer()),
-        'wf2': tf.get_variable('W2', shape=(784,10), initializer=tf.contrib.layers.xavier_initializer())
-    }
-    biases = {
-        'bc1': tf.get_variable('B0', shape=(32), initializer=tf.contrib.layers.xavier_initializer()),
-        'bf1': tf.get_variable('B1', shape=(784), initializer=tf.contrib.layers.xavier_initializer()),
-        'bf2': tf.get_variable('B2', shape=(10), initializer=tf.contrib.layers.xavier_initializer())
-    }
+    return loss_train, accuracy_train, loss_valid, accuracy_valid, loss_test, accuracy_test
+
+
+def cnn(weights, biases, x, p):
     conv1 = conv2d(x, weights['wc1'], biases['bc1'])
     conv1 = batchNormalization(conv1)
     conv1 = maxpool2d(conv1)
-    conv1 = tf.reshape(conv1, [-1])
-    fc1 = tf.nn.relu(tf.add(tf.linalg.matmul(conv1, wf1), bf1))
-    fc2 = tf.nn.softmax(tf.add(tf.linalg.matmul(fc1, wf2), bf2))
-    return fc2
+    conv1 = tf.reshape(conv1, [32, 6272])
+    fc1 = tf.nn.relu(tf.nn.dropout(tf.add(tf.linalg.matmul(conv1, weights['wf1']), biases['bf1']), rate = p))
+    fc2 = tf.nn.softmax(tf.add(tf.linalg.matmul(fc1, weights['wf2']), biases['bf2']))
+    d1 = tf.nn.l2_loss(weights['wf1'])
+    d2 = tf.nn.l2_loss(weights['wf2'])
+    return fc2, d1, d2
 
 def conv2d(x, filt, b, strides=1):
     # Conv2D wrapper, with bias and relu activation
@@ -211,4 +237,3 @@ def loss_calculation(target, record):
             loss_record.append(loss)
 
     return loss_record
-#🐫总好牛啊
