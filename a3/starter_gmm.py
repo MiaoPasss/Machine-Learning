@@ -11,7 +11,7 @@ data = np.load('data2D.npy')
 N = num_pts
 D = dim
 
-def MoG(k, is_valid=False,🐫=‘🐂🍺’):
+def MoG(k, is_valid=False):
   # For Validation set
   train_batch = N
   train_data = data
@@ -26,17 +26,19 @@ def MoG(k, is_valid=False,🐫=‘🐂🍺’):
 
   Mu = tf.Variable(tf.random.truncated_normal([k, D]))
   X = tf.placeholder(tf.float32, shape = [None, D])
-  sigma = tf.exp(tf.Variable(tf.random.truncated_normal([k, 1])))
-  log_pi = logsoftmax(tf.Variable(tf.random.truncated_normal([k, 1])))
+  phi = tf.Variable(tf.random.truncated_normal([k, 1]))
+  psi = tf.Variable(tf.random.truncated_normal([k, 1]))
+  sigma = tf.exp(phi)
+  log_pi = logsoftmax(psi)
 
   log_Gauss = log_GaussPDF(X,Mu,sigma)
   log_pstr = log_posterior(log_Gauss, log_pi)
 
   mle_predict = tf.argmax(log_pstr,axis=1)
-  logloss = - tf.reduce_sum(hlp.reduce_logsumexp(log_Gauss + tf.transpose(log_pi)),axis=0)
+  logloss = - tf.reduce_sum(reduce_logsumexp(log_Gauss + tf.transpose(log_pi)),axis=0)
   _, _, count = tf.unique_with_counts(mle_predict)
   percentage = tf.divide(count, train_batch)
-  
+
 
   optimizer = tf.train.AdamOptimizer(learning_rate=0.1, beta1=0.9, beta2=0.99, epsilon=1e-5)
   optimizer = optimizer.minimize(logloss)
@@ -66,7 +68,7 @@ def MoG(k, is_valid=False,🐫=‘🐂🍺’):
     plt.ylabel('loss')
     plt.grid()
     plt.legend(['Training Loss'])
-    plt.savefig('Training_Loss_k={}.png'.format(k))
+    plt.savefig('Gaussian_Training_Loss_k={}.png'.format(k))
 
     plt.figure()
     plt.title('Data Points with number of gaussian clusters = {}'.format(k))
@@ -74,7 +76,15 @@ def MoG(k, is_valid=False,🐫=‘🐂🍺’):
     plt.xlabel('Dimension 1')
     plt.ylabel('Dimension 2')
     plt.grid()
-    plt.savefig('Data_Points_k={}.png'.format(k))
+    plt.savefig('Gaussian_Data_Points_k={}.png'.format(k))
+
+    print("Final value of phi and psi:")
+    print(phi.eval())
+    print(psi.eval())
+
+    print("Final value of sigma and pi:")
+    print(sigma.eval())
+    print(tf.exp(log_pi).eval())
 
 
     session.close()
@@ -105,7 +115,7 @@ def log_GaussPDF(X, mu, sigma):
     coef = - (D / 2) * tf.log(2 * np.pi * tf.transpose(sigma))
     return tf.add(coef, exp)
 
-    # TODO
+
 
 def log_posterior(log_PDF, log_pi):
     # Input
@@ -117,7 +127,7 @@ def log_posterior(log_PDF, log_pi):
 
     # TODO
     num = tf.add(log_PDF, tf.transpose(log_pi))
-    den = hlp.reduce_logsumexp(num, keep_dims=True)
+    den = reduce_logsumexp(num, keep_dims=True)
     return tf.subtract(num,den)
 
 MoG(1, False)
