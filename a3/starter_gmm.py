@@ -112,7 +112,7 @@ def log_GaussPDF(X, mu, sigma):
 
     distance = distanceFunc(X,mu)
     exp = - tf.divide(distance, 2 * tf.transpose(sigma))
-    coef = - (D / 2) * tf.log(2 * np.pi * tf.transpose(sigma))
+    coef = - (D / 2) * tf.log(2 * np.pi) - (1/2) * tf.log(tf.transpose(sigma))
     return tf.add(coef, exp)
 
 
